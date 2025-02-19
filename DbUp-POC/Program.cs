@@ -14,9 +14,7 @@ namespace DbUp_POC
         static async Task Main(string[] args)
         {
             var connectionString = await InitializeDatabase();
-
             var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-
             var upgradeScripts = new FileSystemScriptProvider(Path.Combine(Directory.GetCurrentDirectory(), config["MigrationScriptsPaths:Up"]));
             var downgradeScripts = new FileSystemScriptProvider(Path.Combine(Directory.GetCurrentDirectory(), config["MigrationScriptsPaths:Down"]));
 
@@ -27,11 +25,13 @@ namespace DbUp_POC
                 .LogTo(new ConsoleUpgradeLog())
                 .WithTransaction() // rolls back migrations in case of an exception
                 .BuildWithDowngrade(false);
+
             var scripts = upgradeEngine.UpgradeEngine.GetScriptsToExecute();
             foreach (var item in scripts)
             {
                 Console.WriteLine(item.Name);
             }
+
             Console.WriteLine("U for upgrade, D for downgrade");
             var a = Console.ReadKey();
             while (a.Key != ConsoleKey.U && a.Key != ConsoleKey.D)
@@ -42,6 +42,14 @@ namespace DbUp_POC
             if (a.Key == ConsoleKey.U)
             {
                 upgradeEngine.PerformUpgrade();
+
+                Console.WriteLine("If you want to downgrade, press D. Press anything else to exit.");
+                a = Console.ReadKey();
+                if (a.Key == ConsoleKey.D)
+                {
+                    upgradeEngine.PerformDowngradeForScripts(upgradeEngine.UpgradeEngine.GetExecutedScripts().ToArray());
+                }
+                else Environment.Exit(0);
             }
             if (a.Key == ConsoleKey.D)
             {
