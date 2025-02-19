@@ -1,0 +1,13 @@
+USE test
+GO
+
+CREATE OR ALTER VIEW MyView AS
+SELECT ItemName, Price FROM Items
+GO
+
+CREATE OR ALTER VIEW ViewToUpdate AS
+SELECT ItemName, Price FROM Items
+GO
+
+CREATE OR ALTER VIEW ViewToDelete AS
+SELECT ItemName, Price FROM Items
