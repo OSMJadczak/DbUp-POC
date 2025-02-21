@@ -15,9 +15,7 @@
   <ItemGroup>
     <PackageReference Include="dbup-sqlserver" Version="5.0.37" />
     <PackageReference Include="DbUp.Downgrade" Version="2.4.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.2" />
-    <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
     <PackageReference Include="Testcontainers.MsSql" Version="4.2.0" />
   </ItemGroup>
 
@@ -35,6 +33,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="init\00005-Init-index.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="targetproject2\cleanup\00001-remove-tabletoadjust-backup.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="targetproject2\cleanup\00002-remove-items-backup.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="targetproject2\cleanup\00003-remove-tabletodrop-backup.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="targetproject2\down\00001-Create-table.sql">
@@ -90,6 +97,18 @@
     </None>
     <None Update="targetproject2\down\00018-Alter-procedure-inside.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="targetproject2\init\00002-Init-table.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="targetproject2\init\00003-InitView.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="targetproject2\init\00004-InitProc.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="targetproject2\init\00005-Init-index.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="targetproject2\up\00001-Create-table.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

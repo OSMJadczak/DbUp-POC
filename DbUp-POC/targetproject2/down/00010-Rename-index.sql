@@ -1,3 +1,3 @@
 USE test;
 
-EXEC sp_rename 'Items.IndexRenamed', 'Items.IndexToRename', 'INDEX'
+EXEC sp_rename 'Items.IndexRenamed', 'IndexToRename', 'INDEX'

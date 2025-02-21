@@ -1,0 +1,56 @@
+parameters:
+  - name: 'FolderName'
+    type: string
+
+  - name: 'ConnectionString'
+    type: string
+  
+  - name: 'TimeoutInMinutes'
+    type: int
+    default: 20
+
+  - name: 'VmImage'
+    type: string
+    default: 'ubuntu-latest'
+
+  - name: 'SolutionPath'
+    type: string
+    default: '*/**/*.sln'
+  
+jobs:
+  - job: 'Database_Upgrade_${{ parameters.ProjectName }}'
+    displayName: 'Database_Upgrade_${{ parameters.ProjectName }}'
+    timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
+    cancelTimeoutInMinutes: 2
+    pool:
+      vmImage: '${{ parameters.VmImage }}'
+    steps:
+      - checkout: self
+        fetchDepth: 0
+
+      - task: DotNetCoreCLI@2
+        displayName: 'Dotnet restore'
+        inputs:
+          command: 'restore'
+          projects: |
+            ${{ parameters.SolutionPath }}
+          restoreArguments: '--locked-mode'
+          feedsToUse: 'config'
+          nugetConfigPath: '${{ parameters.NugetConfigPath }}'
+          verbosityRestore: 'Minimal'
+
+      - task: DotNetCoreCLI@2
+        displayName: 'Build solution'
+        inputs:
+          command: 'build'
+          projects: '${{ parameters.SolutionPath }}'
+
+      - publish: $(System.DefaultWorkingDirectory)/bin/WebApp
+        artifact: databaseUpdater
+      
+      - task: PowerShell@2
+        displayName: 'Run upgrade application'
+        inputs:
+          targetType: 'inline'
+          script: |
+            $process = Start-Process -FilePath "C:\DbUp-POC.exe" -ArgumentList "upgrade -c ${{ parameters.ConnectionString }} -f ${{ parameters.FolderName }}"
