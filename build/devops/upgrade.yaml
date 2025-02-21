@@ -32,8 +32,7 @@ jobs:
     displayName: 'Database_Upgrade_${{ parameters.ProjectName }}'
     timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
     cancelTimeoutInMinutes: 2
-    pool:
-      vmImage: '${{ parameters.VmImage }}'
+    pool: MyPool
     steps:
       - checkout: self
         fetchDepth: 0
