@@ -63,8 +63,7 @@ jobs:
 
       - task: CmdLine@2
         inputs:
-          script: |
-            'DbUp-POC.exe upgrade -c ${{ parameters.ConnectionString }} -f ${{ parameters.FolderName }}'
+          script: 'DbUp-POC.exe upgrade -c ${{ parameters.ConnectionString }} -f ${{ parameters.FolderName }}'
           workingDirectory: $(System.DefaultWorkingDirectory)/DbUp-POC/bin/Debug/net8.0/
       
       # - task: PowerShellOnTargetMachines@3
