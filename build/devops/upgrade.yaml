@@ -21,7 +21,7 @@ parameters:
 
   - name: 'SolutionPath'
     type: string
-    default: '*/**/*.sln'
+    default: 'DbUp-POC.sln'
 
   - name: 'ProjectName'
     type: string
