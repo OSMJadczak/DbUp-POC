@@ -26,6 +26,10 @@ parameters:
   - name: 'ProjectName'
     type: string
     default: 'TestProject'
+
+  - name: 'TargetMachine'
+    type: string
+    default: '127.0.0.1,5985'
   
 jobs:
   - job: 'Database_Upgrade_${{ parameters.ProjectName }}'
@@ -60,6 +64,7 @@ jobs:
       - task: PowerShellOnTargetMachines@3
         displayName: 'Run upgrade application'
         inputs:
+          machines: ${{ parameters.TargetMachine }}
           scriptType: 'FilePath'
           scriptPath: $(System.DefaultWorkingDirectory)/DbUp-POC/bin/Debug/net8.0/DbUp-POC.exe
           arguments: 'upgrade -c ${{ parameters.ConnectionString }} -f ${{ parameters.FolderName }}'
