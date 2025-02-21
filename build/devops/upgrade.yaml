@@ -60,14 +60,19 @@ jobs:
 
       - publish: $(System.DefaultWorkingDirectory)/DbUp-POC/bin/Debug/net8.0/DbUp-POC.exe
         artifact: 'databaseUpdater'
-      
-      - task: PowerShellOnTargetMachines@3
-        displayName: 'Run upgrade application'
+
+      - task: CmdLine@2
         inputs:
-          machines: ${{ parameters.TargetMachine }}
-          scriptType: 'FilePath'
-          scriptPath: $(System.DefaultWorkingDirectory)/DbUp-POC/bin/Debug/net8.0/DbUp-POC.exe
-          arguments: 'upgrade -c ${{ parameters.ConnectionString }} -f ${{ parameters.FolderName }}'
+          script: 'DbUp-POC.exe upgrade -c ${{ parameters.ConnectionString }} -f ${{ parameters.FolderName }}'
+          workingDirectory: $(System.DefaultWorkingDirectory)/DbUp-POC/bin/Debug/net8.0/
+      
+      # - task: PowerShellOnTargetMachines@3
+      #   displayName: 'Run upgrade application'
+      #   inputs:
+      #     machines: ${{ parameters.TargetMachine }}
+      #     scriptType: 'FilePath'
+      #     scriptPath: $(System.DefaultWorkingDirectory)/DbUp-POC/bin/Debug/net8.0/DbUp-POC.exe
+      #     arguments: 'upgrade -c ${{ parameters.ConnectionString }} -f ${{ parameters.FolderName }}'
       
       # - task: PowerShell@2
       #   displayName: 'Run upgrade application'
