@@ -54,7 +54,7 @@ jobs:
           command: 'build'
           projects: '${{ parameters.SolutionPath }}'
 
-      - publish: $(System.DefaultWorkingDirectory)/bin/WebApp
+      - publish: $(System.DefaultWorkingDirectory)/bin/DbUp-POC
         artifact: 'databaseUpdater'
       
       - task: PowerShell@2
