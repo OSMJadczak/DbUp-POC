@@ -11,6 +11,10 @@ parameters:
     type: number
     default: 20
 
+  - name: 'NugetConfigPath'
+    type: string
+    default: '$(System.DefaultWorkingDirectory)/nuget.config'
+
   - name: 'VmImage'
     type: string
     default: 'ubuntu-latest'
@@ -18,6 +22,10 @@ parameters:
   - name: 'SolutionPath'
     type: string
     default: '*/**/*.sln'
+
+  - name: 'ProjectName'
+    type: string
+    default: 'TestProject'
   
 jobs:
   - job: 'Database_Upgrade_${{ parameters.ProjectName }}'
