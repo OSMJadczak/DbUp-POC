@@ -84,13 +84,20 @@ jobs:
           versionPublish: '$(package_version)'
           packagePublishDescription: 'Database updater of run ${Build.BuildId} run by ${Build.QueuedBy}.'
 
-  - job: 'Database_Upgrade_${{ parameters.ProjectName }}'
+  - job: 'DatabaseUpgrade'
     displayName: 'Database_Upgrade_${{ parameters.ProjectName }}'
     timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
     dependsOn: ArtifactPublish
     cancelTimeoutInMinutes: 2
     pool: MyPool
     steps:
+      - task: ManualValidation@1
+        timeoutInMinutes: 1440 # task times out in 1 day
+        inputs:
+            instructions: 'Please validate if database is suitable for cleanup.'
+            allowApproversToApproveTheirOwnRuns: true
+            onTimeout: 'reject'
+            
       - checkout: self
         fetchDepth: 0
 
@@ -112,5 +119,43 @@ jobs:
       - task: CmdLine@2
         inputs:
           script: 'DbUp-POC.exe upgrade -c "${{ parameters.ConnectionString }}" -f "${{ parameters.FolderName }}"'
+          workingDirectory: '$(Build.SourcesDirectory)/net8.0'
+          failOnStderr: true
+
+  - job: 'DatabaseClean'
+    displayName: 'Cleaning database'
+    timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
+    dependsOn: DatabaseUpgrade
+    cancelTimeoutInMinutes: 2
+    pool: MyPool
+    steps:
+      - task: ManualValidation@1
+        timeoutInMinutes: 1440 # task times out in 1 day
+        inputs:
+            instructions: 'Please validate if database is suitable for cleanup.'
+            allowApproversToApproveTheirOwnRuns: true
+            onTimeout: 'reject'
+
+      - checkout: self
+        fetchDepth: 0
+
+      - task: UniversalPackages@0
+        displayName: Download a Universal Package
+        inputs:
+          command: download
+          vstsFeed: 'dbupgrade-poc/${{ parameters.ArtifactFeedName }}'
+          vstsFeedPackage: '${{ parameters.FeedPackageName }}'
+          vstsPackageVersion: '*'
+          downloadDirectory: '$(Build.SourcesDirectory)'
+
+      - task: ExtractFiles@1
+        inputs:
+          archiveFilePatterns: '$(Build.SourcesDirectory)/$(Build.BuildId).zip'
+          cleanDestinationFolder: false
+          overwriteExistingFiles: true
+
+      - task: CmdLine@2
+        inputs:
+          script: 'DbUp-POC.exe clean -c "${{ parameters.ConnectionString }}" -f "${{ parameters.FolderName }}"'
           workingDirectory: '$(Build.SourcesDirectory)/net8.0'
           failOnStderr: true
