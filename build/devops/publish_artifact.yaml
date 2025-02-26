@@ -106,4 +106,5 @@ jobs:
       - task: CmdLine@2
         inputs:
           script: 'DbUp-POC.exe upgrade -c "${{ parameters.ConnectionString }}" -f "${{ parameters.FolderName }}"'
-          workingDirectory: $(Build.SourcesDirectory)'
+          workingDirectory: $(Build.SourcesDirectory)
+          failOnStderr: true
