@@ -62,7 +62,7 @@ jobs:
         inputs:
           command: publish
           publishDirectory: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-          vstsFeedPublish: '<projectName>/<feedName>'
+          vstsFeedPublish: '${{ parameters.ProjectName }}/${{ parameters.ArtifactFeedName }}'
           vstsFeedPackagePublish: '${{ parameters.FeedPackageName }}-${Build.BuildId}'
           version: custom
           versionPublish: '$(package_version)'
