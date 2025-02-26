@@ -135,7 +135,6 @@ stages:
     - job: 'DatabaseCleanDev1'
       displayName: 'Cleaning database for DEV1'
       timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
-      dependsOn: DatabaseUpgrade
       cancelTimeoutInMinutes: 2
       pool: MyPool
       steps:
