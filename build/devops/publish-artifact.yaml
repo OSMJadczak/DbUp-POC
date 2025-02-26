@@ -1,12 +1,4 @@
 parameters:
-  - name: 'FolderName'
-    type: string
-    default: "./targetproject2"
-
-  - name: 'ConnectionString'
-    type: string
-    default: "Data Source=127.0.0.1,5001;Initial Catalog=test;User ID=sa;Password=Strong_password_123!;Integrated Security=false;Trust Server Certificate=true"
-  
   - name: 'TimeoutInMinutes'
     type: number
     default: 20
@@ -14,10 +6,6 @@ parameters:
   - name: 'NugetConfigPath'
     type: string
     default: '$(System.DefaultWorkingDirectory)/nuget.config'
-
-  - name: 'VmImage'
-    type: string
-    default: 'ubuntu-latest'
 
   - name: 'SolutionPath'
     type: string
@@ -27,13 +15,9 @@ parameters:
     type: string
     default: 'TestProject'
 
-  - name: 'TargetMachine'
-    type: string
-    default: '127.0.0.1,5985'
-  
 jobs:
-  - job: 'Database_Upgrade_${{ parameters.ProjectName }}'
-    displayName: 'Database_Upgrade_${{ parameters.ProjectName }}'
+  - job: publish-artifact
+    displayName: 'Publish_Artifact_For_${{ parameters.ProjectName }}'
     timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
     cancelTimeoutInMinutes: 2
     pool: MyPool
@@ -60,8 +44,3 @@ jobs:
 
       - publish: $(System.DefaultWorkingDirectory)/DbUp-POC/bin/Debug/net8.0/DbUp-POC.exe
         artifact: 'databaseUpdater'
-
-      - task: CmdLine@2
-        inputs:
-          script: 'DbUp-POC.exe upgrade -c "${{ parameters.ConnectionString }}" -f "${{ parameters.FolderName }}"'
-          workingDirectory: $(System.DefaultWorkingDirectory)/DbUp-POC/bin/Debug/net8.0/
