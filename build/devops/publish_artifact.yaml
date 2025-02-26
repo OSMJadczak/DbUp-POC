@@ -16,7 +16,7 @@ parameters:
     default: 'TestProject'
 
 jobs:
-  - job: publish-artifact
+  - job: publish_artifact
     displayName: 'Publish_Artifact_For_${{ parameters.ProjectName }}'
     timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
     cancelTimeoutInMinutes: 2
