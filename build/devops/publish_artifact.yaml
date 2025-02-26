@@ -94,7 +94,6 @@ stages:
     - deployment: Deployment
       environment: 'DEV1'
     - template: upgrade.yaml
-      displayName: 'Upgrading database for DEV1'
       parameters:
         FolderName: '${{ paramaters.FolderName }}'
         ConnectionString: '${{ parameters.ConnectionString }}'
@@ -108,7 +107,6 @@ stages:
     - deployment: Deployment
       environment: 'DEV1'
     - template: clean.yaml
-      displayName: 'Cleaning database for DEV1'
       parameters:
         FolderName: '${{ paramaters.FolderName }}'
         ConnectionString: '${{ parameters.ConnectionString }}'
