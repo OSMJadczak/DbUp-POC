@@ -103,8 +103,14 @@ jobs:
           vstsPackageVersion: '*'
           downloadDirectory: '$(Build.SourcesDirectory)'
 
+      - task: ExtractFiles@1
+        inputs:
+          archiveFilePatterns: '$(Build.SourcesDirectory)/$(Build.BuildId).zip'
+          cleanDestinationFolder: false
+          overwriteExistingFiles: true
+
       - task: CmdLine@2
         inputs:
           script: 'DbUp-POC.exe upgrade -c "${{ parameters.ConnectionString }}" -f "${{ parameters.FolderName }}"'
-          workingDirectory: $(Build.SourcesDirectory)
+          workingDirectory: '$(Build.SourcesDirectory)/net8.0'
           failOnStderr: true
