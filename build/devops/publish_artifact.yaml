@@ -102,7 +102,7 @@ stages:
         FeedPackageName: '${{ parameters.FeedPackageName }}'
 - stage: 'DEV1_DatabaseClean'
   displayName: 'Cleanup of database'
-  dependsOn: 'DatabaseUpgradeDev1'
+  dependsOn: 'DEV1_DatabaseUpgrade'
   jobs:
     - deployment: Deployment
       environment: 'DEV1'
