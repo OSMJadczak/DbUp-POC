@@ -63,7 +63,7 @@ jobs:
           command: publish
           publishDirectory: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
           vstsFeedPublish: 'dbupgrade-poc/${{ parameters.ArtifactFeedName }}'
-          vstsFeedPackagePublish: '${{ parameters.FeedPackageName }}-${Build.BuildId}'
+          vstsFeedPackagePublish: '${{ parameters.FeedPackageName }}'
           version: custom
           versionPublish: '$(package_version)'
           packagePublishDescription: 'Database updater of run ${Build.BuildId} run by ${Build.QueuedBy}.'
