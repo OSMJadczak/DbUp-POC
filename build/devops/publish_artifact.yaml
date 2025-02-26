@@ -100,7 +100,6 @@ jobs:
           command: download
           vstsFeed: 'dbupgrade-poc/${{ parameters.ArtifactFeedName }}'
           vstsFeedPackage: '${{ parameters.FeedPackageName }}'
-          vstsPackageVersion: '$(package_version)'
           downloadDirectory: '$(Build.SourcesDirectory)\someFolder'
 
       - task: CmdLine@2
