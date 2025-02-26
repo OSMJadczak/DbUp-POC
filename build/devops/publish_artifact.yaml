@@ -87,7 +87,7 @@ stages:
             version: custom
             versionPublish: '$(package_version)'
             packagePublishDescription: 'Database updater of run ${Build.BuildId} run by ${Build.QueuedBy}.'
-- stage: 'DatabaseUpgradeDev1'
+- stage: 'DEV1_DatabaseUpgrade'
   displayName: 'Upgrade dev1'
   dependsOn: 'PublishArtifact'
   jobs:
@@ -100,7 +100,7 @@ stages:
         TimeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
         ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
         FeedPackageName: '${{ parameters.FeedPackageName }}'
-- stage: DEV1-DatabaseClean
+- stage: 'DEV1_DatabaseClean'
   displayName: 'Cleanup of database'
   dependsOn: 'DatabaseUpgradeDev1'
   jobs:
