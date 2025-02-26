@@ -1,4 +1,12 @@
 parameters:
+  - name: 'FolderName'
+    type: string
+    default: "./targetproject2"
+
+  - name: 'ConnectionString'
+    type: string
+    default: "Data Source=127.0.0.1,5001;Initial Catalog=test;User ID=sa;Password=Strong_password_123!;Integrated Security=false;Trust Server Certificate=true"
+  
   - name: 'TimeoutInMinutes'
     type: number
     default: 20
@@ -7,6 +15,10 @@ parameters:
     type: string
     default: '$(System.DefaultWorkingDirectory)/nuget.config'
 
+  - name: 'VmImage'
+    type: string
+    default: 'ubuntu-latest'
+
   - name: 'SolutionPath'
     type: string
     default: 'DbUp-POC.sln'
@@ -14,6 +26,10 @@ parameters:
   - name: 'ProjectName'
     type: string
     default: 'TestProject'
+
+  - name: 'TargetMachine'
+    type: string
+    default: '127.0.0.1,5985'
   
   - name: 'ArtifactFeedName'
     type: string
@@ -24,7 +40,7 @@ parameters:
     default: 'dbupgrade'
 
 jobs:
-  - job: publish_artifact
+  - job: ArtifactPublish
     displayName: 'Publish artifact for ${{ parameters.ProjectName }}'
     timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
     cancelTimeoutInMinutes: 2
@@ -68,5 +84,26 @@ jobs:
           versionPublish: '$(package_version)'
           packagePublishDescription: 'Database updater of run ${Build.BuildId} run by ${Build.QueuedBy}.'
 
-      # - publish: $(System.DefaultWorkingDirectory)/DbUp-POC/bin/Debug/net8.0/DbUp-POC.exe
-      #   artifact: 'databaseUpdater'
+  - job: 'Database_Upgrade_${{ parameters.ProjectName }}'
+    displayName: 'Database_Upgrade_${{ parameters.ProjectName }}'
+    timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
+    dependsOn: ArtifactPublish
+    cancelTimeoutInMinutes: 2
+    pool: MyPool
+    steps:
+      - checkout: self
+        fetchDepth: 0
+
+      - task: UniversalPackages@0
+        displayName: Download a Universal Package
+        inputs:
+          command: download
+          vstsFeed: 'dbupgrade-poc/${{ parameters.ArtifactFeedName }}'
+          vstsFeedPackage: '${{ parameters.FeedPackageName }}'
+          vstsPackageVersion: '$(package_version)'
+          downloadDirectory: '$(Build.SourcesDirectory)\someFolder'
+
+      - task: CmdLine@2
+        inputs:
+          script: 'DbUp-POC.exe upgrade -c "${{ parameters.ConnectionString }}" -f "${{ parameters.FolderName }}"'
+          workingDirectory: $(Build.SourcesDirectory)\someFolder'

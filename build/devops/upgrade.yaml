@@ -41,27 +41,16 @@ jobs:
       - checkout: self
         fetchDepth: 0
 
-      - task: DotNetCoreCLI@2
-        displayName: 'Dotnet restore'
+      - task: UniversalPackages@0
+        displayName: Download a Universal Package
         inputs:
-          command: 'restore'
-          projects: |
-            ${{ parameters.SolutionPath }}
-          restoreArguments: '--locked-mode'
-          feedsToUse: 'config'
-          nugetConfigPath: '${{ parameters.NugetConfigPath }}'
-          verbosityRestore: 'Minimal'
-
-      - task: DotNetCoreCLI@2
-        displayName: 'Build solution'
-        inputs:
-          command: 'build'
-          projects: '${{ parameters.SolutionPath }}'
-
-      - publish: $(System.DefaultWorkingDirectory)/DbUp-POC/bin/Debug/net8.0/DbUp-POC.exe
-        artifact: 'databaseUpdater'
+          command: download
+          vstsFeed: 'dbupgrade-poc/${{ parameters.ArtifactFeedName }}'
+          vstsFeedPackage: '${{ parameters.FeedPackageName }}'
+          vstsPackageVersion: '$(package_version)'
+          downloadDirectory: '$(Build.SourcesDirectory)\someFolder'
 
       - task: CmdLine@2
         inputs:
           script: 'DbUp-POC.exe upgrade -c "${{ parameters.ConnectionString }}" -f "${{ parameters.FolderName }}"'
-          workingDirectory: $(System.DefaultWorkingDirectory)/DbUp-POC/bin/Debug/net8.0/
+          workingDirectory: $(Build.SourcesDirectory)\someFolder'
