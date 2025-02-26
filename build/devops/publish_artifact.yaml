@@ -17,7 +17,7 @@ parameters:
   
   - name: 'ArtifactFeedName'
     type: string
-    default: 'Default'
+    default: 'DefaultFeed'
 
   - name: 'FeedPackageName'
     type: string
