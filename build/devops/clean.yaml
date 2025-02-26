@@ -1,27 +1,27 @@
 parameters:
-- name: 'FolderName'
-  type: string
-  default: "./targetproject2"
+  - name: 'FolderName'
+    type: string
+    default: "./targetproject2"
 
-- name: 'ConnectionString'
-  type: string
-  default: "Data Source=127.0.0.1,5001;Initial Catalog=test;User ID=sa;Password=Strong_password_123!;Integrated Security=false;Trust Server Certificate=true"
+  - name: 'ConnectionString'
+    type: string
+    default: "Data Source=127.0.0.1,5001;Initial Catalog=test;User ID=sa;Password=Strong_password_123!;Integrated Security=false;Trust Server Certificate=true"
+  
+  - name: 'TimeoutInMinutes'
+    type: number
+    default: 20
+  
+  - name: 'ArtifactFeedName'
+    type: string
+    default: 'DefaultFeed'
 
-- name: 'TimeoutInMinutes'
-  type: number
-  default: 20
-
-- name: 'ArtifactFeedName'
-  type: string
-  default: 'DefaultFeed'
-
-- name: 'FeedPackageName'
-  type: string
-  default: 'dbupgrade'
-
+  - name: 'FeedPackageName'
+    type: string
+    default: 'dbupgrade'
+    
 jobs:
-- job: 'DatabaseUpgradeDev1'
-  displayName: 'Database upgrade for DEV1'
+- job: 'DatabaseCleanDev1'
+  displayName: 'Cleaning database for DEV1'
   timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
   cancelTimeoutInMinutes: 2
   pool: MyPool
@@ -46,6 +46,6 @@ jobs:
 
     - task: CmdLine@2
       inputs:
-        script: 'DbUp-POC.exe upgrade -c "${{ parameters.ConnectionString }}" -f "${{ parameters.FolderName }}"'
+        script: 'DbUp-POC.exe clean -c "${{ parameters.ConnectionString }}" -f "${{ parameters.FolderName }}"'
         workingDirectory: '$(Build.SourcesDirectory)/net8.0'
         failOnStderr: true

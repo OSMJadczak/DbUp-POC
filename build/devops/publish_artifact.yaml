@@ -39,10 +39,6 @@ parameters:
     type: string
     default: 'dbupgrade'
 
-  - name: 'TargetEnvironment'
-    type: string
-    default: 'DEV1'
-
 stages:
 - stage: PublishArtifact
   pool: MyPool
@@ -97,67 +93,25 @@ stages:
   jobs:
     - deployment: Deployment
       environment: 'DEV1'
-    - job: 'DatabaseUpgradeDev1'
-      displayName: 'Database upgrade for DEV1'
-      timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
-      cancelTimeoutInMinutes: 2
-      pool: MyPool
-      steps:
-        - checkout: self
-          fetchDepth: 0
-
-        - task: UniversalPackages@0
-          displayName: Download a Universal Package
-          inputs:
-            command: download
-            vstsFeed: 'dbupgrade-poc/${{ parameters.ArtifactFeedName }}'
-            vstsFeedPackage: '${{ parameters.FeedPackageName }}'
-            vstsPackageVersion: '*'
-            downloadDirectory: '$(Build.SourcesDirectory)'
-
-        - task: ExtractFiles@1
-          inputs:
-            archiveFilePatterns: '$(Build.SourcesDirectory)/$(Build.BuildId).zip'
-            cleanDestinationFolder: false
-            overwriteExistingFiles: true
-
-        - task: CmdLine@2
-          inputs:
-            script: 'DbUp-POC.exe upgrade -c "${{ parameters.ConnectionString }}" -f "${{ parameters.FolderName }}"'
-            workingDirectory: '$(Build.SourcesDirectory)/net8.0'
-            failOnStderr: true
-- stage: DatabaseClean
+    - template: upgrade.yaml
+      displayName: 'Upgrading database for DEV1'
+      parameters:
+        FolderName: '${{ paramaters.FolderName }}'
+        ConnectionString: '${{ parameters.ConnectionString }}'
+        TimeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
+        ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
+        FeedPackageName: '${{ parameters.FeedPackageName }}'
+- stage: DEV1-DatabaseClean
   displayName: 'Cleanup of database'
   dependsOn: 'DatabaseUpgradeDev1'
   jobs:
     - deployment: Deployment
       environment: 'DEV1'
-    - job: 'DatabaseCleanDev1'
+    - template: clean.yaml
       displayName: 'Cleaning database for DEV1'
-      timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
-      cancelTimeoutInMinutes: 2
-      pool: MyPool
-      steps:
-        - checkout: self
-          fetchDepth: 0
-
-        - task: UniversalPackages@0
-          displayName: Download a Universal Package
-          inputs:
-            command: download
-            vstsFeed: 'dbupgrade-poc/${{ parameters.ArtifactFeedName }}'
-            vstsFeedPackage: '${{ parameters.FeedPackageName }}'
-            vstsPackageVersion: '*'
-            downloadDirectory: '$(Build.SourcesDirectory)'
-
-        - task: ExtractFiles@1
-          inputs:
-            archiveFilePatterns: '$(Build.SourcesDirectory)/$(Build.BuildId).zip'
-            cleanDestinationFolder: false
-            overwriteExistingFiles: true
-
-        - task: CmdLine@2
-          inputs:
-            script: 'DbUp-POC.exe clean -c "${{ parameters.ConnectionString }}" -f "${{ parameters.FolderName }}"'
-            workingDirectory: '$(Build.SourcesDirectory)/net8.0'
-            failOnStderr: true
+      parameters:
+        FolderName: '${{ paramaters.FolderName }}'
+        ConnectionString: '${{ parameters.ConnectionString }}'
+        TimeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
+        ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
+        FeedPackageName: '${{ parameters.FeedPackageName }}'
