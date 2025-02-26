@@ -101,9 +101,9 @@ jobs:
           vstsFeed: 'dbupgrade-poc/${{ parameters.ArtifactFeedName }}'
           vstsFeedPackage: '${{ parameters.FeedPackageName }}'
           vstsPackageVersion: '*'
-          downloadDirectory: '$(Build.SourcesDirectory)\someFolder'
+          downloadDirectory: '$(Build.SourcesDirectory)'
 
       - task: CmdLine@2
         inputs:
           script: 'DbUp-POC.exe upgrade -c "${{ parameters.ConnectionString }}" -f "${{ parameters.FolderName }}"'
-          workingDirectory: $(Build.SourcesDirectory)\someFolder'
+          workingDirectory: $(Build.SourcesDirectory)'
