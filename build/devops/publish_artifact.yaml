@@ -14,10 +14,18 @@ parameters:
   - name: 'ProjectName'
     type: string
     default: 'TestProject'
+  
+  - name: 'ArtifactFeedName'
+    type: string
+    default: 'Default'
+
+  - name: 'FeedPackageName'
+    type: string
+    default: 'dbupgrade'
 
 jobs:
   - job: publish_artifact
-    displayName: 'Publish_Artifact_For_${{ parameters.ProjectName }}'
+    displayName: 'Publish artifact for ${{ parameters.ProjectName }}'
     timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
     cancelTimeoutInMinutes: 2
     pool: MyPool
@@ -42,5 +50,23 @@ jobs:
           command: 'build'
           projects: '${{ parameters.SolutionPath }}'
 
-      - publish: $(System.DefaultWorkingDirectory)/DbUp-POC/bin/Debug/net8.0/DbUp-POC.exe
-        artifact: 'databaseUpdater'
+      - task: ArchiveFiles@2
+        displayName: 'Archive files'
+        inputs:
+          rootFolderOrFile: '$(System.DefaultWorkingDirectory)/DbUp-POC/bin/Debug/net8.0'
+          archiveType: 'zip'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+
+      - task: UniversalPackages@0
+        displayName: 'Publish Universal Package'
+        inputs:
+          command: publish
+          publishDirectory: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+          vstsFeedPublish: '${{ parameters.ArtifactFeedName }}'
+          vstsFeedPackagePublish: '${{ parameters.FeedPackageName }}-${Build.BuildId}'
+          version: custom
+          versionPublish: '$(package_version)'
+          packagePublishDescription: 'Database updater of run ${Build.BuildId} run by ${Build.QueuedBy}.'
+
+      # - publish: $(System.DefaultWorkingDirectory)/DbUp-POC/bin/Debug/net8.0/DbUp-POC.exe
+      #   artifact: 'databaseUpdater'
