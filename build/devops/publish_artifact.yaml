@@ -43,113 +43,122 @@ parameters:
     type: string
     default: 'DEV1'
 
-jobs:
-  - job: ArtifactPublish
-    displayName: 'Publish artifact for ${{ parameters.ProjectName }}'
-    timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
-    cancelTimeoutInMinutes: 2
-    pool: MyPool
-    steps:
-      - checkout: self
-        fetchDepth: 0
+stages:
+- stage: PublishArtifact
+  pool: MyPool
+  displayName: 'Publish artifact'
+  jobs:
+    - job: ArtifactPublish
+    - deployment: Deployment
+      displayName: 'Publish artifact for ${{ parameters.ProjectName }}'
+      timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
+      cancelTimeoutInMinutes: 2
+      pool: MyPool
+      steps:
+        - checkout: self
+          fetchDepth: 0
 
-      - task: DotNetCoreCLI@2
-        displayName: 'Dotnet restore'
-        inputs:
-          command: 'restore'
-          projects: |
-            ${{ parameters.SolutionPath }}
-          restoreArguments: '--locked-mode'
-          feedsToUse: 'config'
-          nugetConfigPath: '${{ parameters.NugetConfigPath }}'
-          verbosityRestore: 'Minimal'
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet restore'
+          inputs:
+            command: 'restore'
+            projects: |
+              ${{ parameters.SolutionPath }}
+            restoreArguments: '--locked-mode'
+            feedsToUse: 'config'
+            nugetConfigPath: '${{ parameters.NugetConfigPath }}'
+            verbosityRestore: 'Minimal'
 
-      - task: DotNetCoreCLI@2
-        displayName: 'Build solution'
-        inputs:
-          command: 'build'
-          projects: '${{ parameters.SolutionPath }}'
+        - task: DotNetCoreCLI@2
+          displayName: 'Build solution'
+          inputs:
+            command: 'build'
+            projects: '${{ parameters.SolutionPath }}'
 
-      - task: ArchiveFiles@2
-        displayName: 'Archive files'
-        inputs:
-          rootFolderOrFile: '$(System.DefaultWorkingDirectory)/DbUp-POC/bin/Debug/net8.0'
-          archiveType: 'zip'
-          archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+        - task: ArchiveFiles@2
+          displayName: 'Archive files'
+          inputs:
+            rootFolderOrFile: '$(System.DefaultWorkingDirectory)/DbUp-POC/bin/Debug/net8.0'
+            archiveType: 'zip'
+            archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
 
-      - task: UniversalPackages@0
-        displayName: 'Publish Universal Package'
-        inputs:
-          command: publish
-          publishDirectory: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-          vstsFeedPublish: 'dbupgrade-poc/${{ parameters.ArtifactFeedName }}'
-          vstsFeedPackagePublish: '${{ parameters.FeedPackageName }}'
-          version: custom
-          versionPublish: '$(package_version)'
-          packagePublishDescription: 'Database updater of run ${Build.BuildId} run by ${Build.QueuedBy}.'
+        - task: UniversalPackages@0
+          displayName: 'Publish Universal Package'
+          inputs:
+            command: publish
+            publishDirectory: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+            vstsFeedPublish: 'dbupgrade-poc/${{ parameters.ArtifactFeedName }}'
+            vstsFeedPackagePublish: '${{ parameters.FeedPackageName }}'
+            version: custom
+            versionPublish: '$(package_version)'
+            packagePublishDescription: 'Database updater of run ${Build.BuildId} run by ${Build.QueuedBy}.'
+- stage: 'DatabaseUpgradeDev1'
+  displayName: 'Upgrade dev1'
+  dependsOn: 'PublishArtifact'
+  jobs:
+    - deployment: Deployment
+    - job: 'DatabaseUpgradeDev1'
+      displayName: 'Database upgrade for DEV1'
+      environment: 'DEV1'
+      timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
+      cancelTimeoutInMinutes: 2
+      pool: MyPool
+      steps:
+        - checkout: self
+          fetchDepth: 0
 
-  - job: 'DatabaseUpgradeDev1'
-    displayName: 'Database upgrade for DEV1'
-    timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
-    dependsOn: ArtifactPublish
-    environment:
-      name: 'DEV1'
-    cancelTimeoutInMinutes: 2
-    pool: MyPool
-    steps:
-      - checkout: self
-        fetchDepth: 0
+        - task: UniversalPackages@0
+          displayName: Download a Universal Package
+          inputs:
+            command: download
+            vstsFeed: 'dbupgrade-poc/${{ parameters.ArtifactFeedName }}'
+            vstsFeedPackage: '${{ parameters.FeedPackageName }}'
+            vstsPackageVersion: '*'
+            downloadDirectory: '$(Build.SourcesDirectory)'
 
-      - task: UniversalPackages@0
-        displayName: Download a Universal Package
-        inputs:
-          command: download
-          vstsFeed: 'dbupgrade-poc/${{ parameters.ArtifactFeedName }}'
-          vstsFeedPackage: '${{ parameters.FeedPackageName }}'
-          vstsPackageVersion: '*'
-          downloadDirectory: '$(Build.SourcesDirectory)'
+        - task: ExtractFiles@1
+          inputs:
+            archiveFilePatterns: '$(Build.SourcesDirectory)/$(Build.BuildId).zip'
+            cleanDestinationFolder: false
+            overwriteExistingFiles: true
 
-      - task: ExtractFiles@1
-        inputs:
-          archiveFilePatterns: '$(Build.SourcesDirectory)/$(Build.BuildId).zip'
-          cleanDestinationFolder: false
-          overwriteExistingFiles: true
+        - task: CmdLine@2
+          inputs:
+            script: 'DbUp-POC.exe upgrade -c "${{ parameters.ConnectionString }}" -f "${{ parameters.FolderName }}"'
+            workingDirectory: '$(Build.SourcesDirectory)/net8.0'
+            failOnStderr: true
+- stage: DatabaseClean
+  displayName: 'Cleanup of database'
+  dependsOn: 'DatabaseUpgradeDev1'
+  jobs:
+    - job: 'DatabaseCleanDev1'
+      displayName: 'Cleaning database for DEV1'
+      timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
+      dependsOn: DatabaseUpgrade
+      environment: 'DEV1'
+      cancelTimeoutInMinutes: 2
+      pool: MyPool
+      steps:
+        - checkout: self
+          fetchDepth: 0
 
-      - task: CmdLine@2
-        inputs:
-          script: 'DbUp-POC.exe upgrade -c "${{ parameters.ConnectionString }}" -f "${{ parameters.FolderName }}"'
-          workingDirectory: '$(Build.SourcesDirectory)/net8.0'
-          failOnStderr: true
+        - task: UniversalPackages@0
+          displayName: Download a Universal Package
+          inputs:
+            command: download
+            vstsFeed: 'dbupgrade-poc/${{ parameters.ArtifactFeedName }}'
+            vstsFeedPackage: '${{ parameters.FeedPackageName }}'
+            vstsPackageVersion: '*'
+            downloadDirectory: '$(Build.SourcesDirectory)'
 
-  - job: 'DatabaseCleanDev1'
-    displayName: 'Cleaning database for DEV1'
-    timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
-    dependsOn: DatabaseUpgrade
-    environment:
-      name: 'DEV1'
-    cancelTimeoutInMinutes: 2
-    pool: MyPool
-    steps:
-      - checkout: self
-        fetchDepth: 0
+        - task: ExtractFiles@1
+          inputs:
+            archiveFilePatterns: '$(Build.SourcesDirectory)/$(Build.BuildId).zip'
+            cleanDestinationFolder: false
+            overwriteExistingFiles: true
 
-      - task: UniversalPackages@0
-        displayName: Download a Universal Package
-        inputs:
-          command: download
-          vstsFeed: 'dbupgrade-poc/${{ parameters.ArtifactFeedName }}'
-          vstsFeedPackage: '${{ parameters.FeedPackageName }}'
-          vstsPackageVersion: '*'
-          downloadDirectory: '$(Build.SourcesDirectory)'
-
-      - task: ExtractFiles@1
-        inputs:
-          archiveFilePatterns: '$(Build.SourcesDirectory)/$(Build.BuildId).zip'
-          cleanDestinationFolder: false
-          overwriteExistingFiles: true
-
-      - task: CmdLine@2
-        inputs:
-          script: 'DbUp-POC.exe clean -c "${{ parameters.ConnectionString }}" -f "${{ parameters.FolderName }}"'
-          workingDirectory: '$(Build.SourcesDirectory)/net8.0'
-          failOnStderr: true
+        - task: CmdLine@2
+          inputs:
+            script: 'DbUp-POC.exe clean -c "${{ parameters.ConnectionString }}" -f "${{ parameters.FolderName }}"'
+            workingDirectory: '$(Build.SourcesDirectory)/net8.0'
+            failOnStderr: true
