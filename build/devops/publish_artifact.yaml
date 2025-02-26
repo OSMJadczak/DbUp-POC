@@ -95,7 +95,7 @@ stages:
       environment: 'DEV1'
     - template: upgrade.yaml
       parameters:
-        FolderName: '${{ paramaters.FolderName }}'
+        FolderName: '${{ parameters.FolderName }}'
         ConnectionString: '${{ parameters.ConnectionString }}'
         TimeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
         ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
@@ -108,7 +108,7 @@ stages:
       environment: 'DEV1'
     - template: clean.yaml
       parameters:
-        FolderName: '${{ paramaters.FolderName }}'
+        FolderName: '${{ parameters.FolderName }}'
         ConnectionString: '${{ parameters.ConnectionString }}'
         TimeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
         ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
