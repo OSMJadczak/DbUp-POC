@@ -48,8 +48,8 @@ stages:
   pool: MyPool
   displayName: 'Publish artifact'
   jobs:
-    - job: ArtifactPublish
     - deployment: Deployment
+    - job: ArtifactPublish
       displayName: 'Publish artifact for ${{ parameters.ProjectName }}'
       timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
       cancelTimeoutInMinutes: 2
@@ -97,9 +97,9 @@ stages:
   dependsOn: 'PublishArtifact'
   jobs:
     - deployment: Deployment
+      environment: 'DEV1'
     - job: 'DatabaseUpgradeDev1'
       displayName: 'Database upgrade for DEV1'
-      environment: 'DEV1'
       timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
       cancelTimeoutInMinutes: 2
       pool: MyPool
@@ -131,11 +131,12 @@ stages:
   displayName: 'Cleanup of database'
   dependsOn: 'DatabaseUpgradeDev1'
   jobs:
+    - deployment: Deployment
+      environment: 'DEV1'
     - job: 'DatabaseCleanDev1'
       displayName: 'Cleaning database for DEV1'
       timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
       dependsOn: DatabaseUpgrade
-      environment: 'DEV1'
       cancelTimeoutInMinutes: 2
       pool: MyPool
       steps:
