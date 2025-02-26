@@ -48,7 +48,6 @@ stages:
   pool: MyPool
   displayName: 'Publish artifact'
   jobs:
-    - deployment: Deployment
     - job: ArtifactPublish
       displayName: 'Publish artifact for ${{ parameters.ProjectName }}'
       timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
