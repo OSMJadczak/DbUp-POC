@@ -81,7 +81,7 @@ namespace DbUp_POC.Infrastructure
             downgradeCommand.AddAlias("rollback");
             downgradeCommand.AddAlias("revert");
 
-            downgradeCommand.SetHandler(async (folder, connectionString) =>
+            downgradeCommand.SetHandler((folder, connectionString) =>
             {
                 Helpers.ValidateConnectionStringAndThrow(connectionString);
                 var pathResult = Helpers.ValidatePathAndThrow(folder).Item2;
