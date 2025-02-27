@@ -94,13 +94,13 @@ stages:
     - deployment: Deployment
       environment: 'DEV1'
     - template: upgrade.yaml
-      displayName: 'Upgrade DEV1'
       parameters:
         FolderName: '${{ parameters.FolderName }}'
         ConnectionString: '${{ parameters.ConnectionString }}'
         TimeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
         ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
         FeedPackageName: '${{ parameters.FeedPackageName }}'
+        DisplayName: 'DEV1 Upgrade'
 - stage: 'DEV1_DatabaseClean'
   displayName: 'Cleanup of DEV1 database'
   dependsOn: 'DEV1_DatabaseUpgrade'
@@ -108,13 +108,13 @@ stages:
     - deployment: Deployment
       environment: 'DEV1'
     - template: clean.yaml
-      displayName: 'Clean DEV1'
       parameters:
         FolderName: '${{ parameters.FolderName }}'
         ConnectionString: '${{ parameters.ConnectionString }}'
         TimeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
         ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
         FeedPackageName: '${{ parameters.FeedPackageName }}'
+        DisplayName: 'DEV1 Clean'
 - stage: 'QA1_DatabaseUpgrade'
   displayName: 'Upgrade QA1'
   dependsOn: 'DEV1_DatabaseUpgrade'
@@ -122,13 +122,13 @@ stages:
     - deployment: Deployment
       environment: 'QA1'
     - template: upgrade.yaml
-      displayName: 'Upgrade QA1'
       parameters:
         FolderName: '${{ parameters.FolderName }}'
         ConnectionString: '${{ parameters.ConnectionString }}'
         TimeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
         ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
         FeedPackageName: '${{ parameters.FeedPackageName }}'
+        DisplayName: 'QA1 Upgrade'
 - stage: 'QA1_DatabaseClean'
   displayName: 'Cleanup of QA1 database'
   dependsOn: 'QA1_DatabaseUpgrade'
@@ -136,10 +136,10 @@ stages:
     - deployment: Deployment
       environment: 'QA1'
     - template: clean.yaml
-      displayName: 'Clean QA1'
       parameters:
         FolderName: '${{ parameters.FolderName }}'
         ConnectionString: '${{ parameters.ConnectionString }}'
         TimeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
         ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
         FeedPackageName: '${{ parameters.FeedPackageName }}'
+        DisplayName: 'QA1 Clean'
