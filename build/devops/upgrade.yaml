@@ -21,15 +21,14 @@ parameters:
 
 - name: 'VariableGroupName'
   type: string
-    
-variables:
-  - group: '${{ parameters.VariableGroupName }}'
 
 jobs:
 - job: '${{ parameters.DisplayName }}'
   timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
   cancelTimeoutInMinutes: 2
   pool: $(PoolName)
+  variables:
+    - group: '${{ parameters.VariableGroupName }}'
   steps:
     - checkout: self
       fetchDepth: 0
