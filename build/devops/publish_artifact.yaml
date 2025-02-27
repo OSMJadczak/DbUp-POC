@@ -94,6 +94,7 @@ stages:
     - deployment: Deployment
       environment: 'DEV1'
     - template: upgrade.yaml
+      displayName: 'Upgrade DEV1'
       parameters:
         FolderName: '${{ parameters.FolderName }}'
         ConnectionString: '${{ parameters.ConnectionString }}'
@@ -107,6 +108,7 @@ stages:
     - deployment: Deployment
       environment: 'DEV1'
     - template: clean.yaml
+      displayName: 'Clean DEV1'
       parameters:
         FolderName: '${{ parameters.FolderName }}'
         ConnectionString: '${{ parameters.ConnectionString }}'
@@ -120,6 +122,7 @@ stages:
     - deployment: Deployment
       environment: 'QA1'
     - template: upgrade.yaml
+      displayName: 'Upgrade QA1'
       parameters:
         FolderName: '${{ parameters.FolderName }}'
         ConnectionString: '${{ parameters.ConnectionString }}'
@@ -133,6 +136,7 @@ stages:
     - deployment: Deployment
       environment: 'QA1'
     - template: clean.yaml
+      displayName: 'Clean QA1'
       parameters:
         FolderName: '${{ parameters.FolderName }}'
         ConnectionString: '${{ parameters.ConnectionString }}'
