@@ -89,6 +89,7 @@ stages:
   jobs:
     - deployment: Deployment
       environment: 'DEV1'
+      pool: MyPool
     - template: upgrade.yaml
       parameters:
         FolderName: '${{ parameters.FolderName }}'
@@ -103,6 +104,7 @@ stages:
   jobs:
     - deployment: Deployment
       environment: 'QA1'
+      pool: MyPool
     - template: upgrade.yaml
       parameters:
         FolderName: '${{ parameters.FolderName }}'
