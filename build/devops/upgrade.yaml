@@ -3,10 +3,6 @@ parameters:
   type: string
   default: "./targetproject2"
 
-- name: 'ConnectionString'
-  type: string
-  default: "Data Source=127.0.0.1,5001;Initial Catalog=test;User ID=sa;Password=Strong_password_123!;Integrated Security=false;Trust Server Certificate=true"
-
 - name: 'TimeoutInMinutes'
   type: number
   default: 20
@@ -23,11 +19,17 @@ parameters:
   type: string
   default: 'Database upgrade'
 
+- name: 'VariableGroupName'
+  type: string
+    
+variables:
+  - group: '${{ parameters.VariableGroupName }}'
+
 jobs:
 - job: '${{ parameters.DisplayName }}'
   timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
   cancelTimeoutInMinutes: 2
-  pool: MyPool
+  pool: $(PoolName)
   steps:
     - checkout: self
       fetchDepth: 0
@@ -49,6 +51,6 @@ jobs:
 
     - task: CmdLine@2
       inputs:
-        script: 'DbUp-POC.exe upgrade -c "${{ parameters.ConnectionString }}" -f "${{ parameters.FolderName }}"'
+        script: 'DbUp-POC.exe upgrade -c "$(ConnectionString)" -f "${{ parameters.FolderName }}"'
         workingDirectory: '$(Build.SourcesDirectory)/net8.0'
         failOnStderr: true

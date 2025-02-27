@@ -3,10 +3,6 @@ parameters:
     type: string
     default: "./targetproject2"
 
-  - name: 'ConnectionString'
-    type: string
-    default: "Data Source=127.0.0.1,5001;Initial Catalog=test;User ID=sa;Password=Strong_password_123!;Integrated Security=false;Trust Server Certificate=true"
-  
   - name: 'TimeoutInMinutes'
     type: number
     default: 20
@@ -26,10 +22,6 @@ parameters:
   - name: 'ProjectName'
     type: string
     default: 'TestProject'
-
-  - name: 'TargetMachine'
-    type: string
-    default: '127.0.0.1,5985'
   
   - name: 'ArtifactFeedName'
     type: string
@@ -38,6 +30,10 @@ parameters:
   - name: 'FeedPackageName'
     type: string
     default: 'dbupgrade'
+
+  - name: 'DefaultPool'
+    type: string
+    default: 'MyPool'
 
 stages:
 - stage: PublishArtifact
@@ -101,6 +97,7 @@ stages:
         ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
         FeedPackageName: '${{ parameters.FeedPackageName }}'
         DisplayName: 'DEV1_Upgrade'
+        VariableGroupName: 'DEV1-DatabaseUpgrade'
 - stage: 'DEV1_DatabaseClean'
   displayName: 'Cleanup of DEV1 database'
   dependsOn: 'DEV1_DatabaseUpgrade'
@@ -115,6 +112,7 @@ stages:
         ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
         FeedPackageName: '${{ parameters.FeedPackageName }}'
         DisplayName: 'DEV1_Clean'
+        VariableGroupName: 'DEV1-DatabaseUpgrade'
 - stage: 'QA1_DatabaseUpgrade'
   displayName: 'Upgrade QA1'
   dependsOn: 'DEV1_DatabaseUpgrade'
@@ -129,6 +127,7 @@ stages:
         ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
         FeedPackageName: '${{ parameters.FeedPackageName }}'
         DisplayName: 'QA1_Upgrade'
+        VariableGroupName: 'QA1-DatabaseUpgrade'
 - stage: 'QA1_DatabaseClean'
   displayName: 'Cleanup of QA1 database'
   dependsOn: 'QA1_DatabaseUpgrade'
@@ -143,3 +142,4 @@ stages:
         ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
         FeedPackageName: '${{ parameters.FeedPackageName }}'
         DisplayName: 'QA1_Clean'
+        VariableGroupName: 'QA1-DatabaseUpgrade'

@@ -22,12 +22,18 @@ parameters:
   - name: 'DisplayName'
     type: string
     default: 'Database upgrade'
+
+  - name: 'VariableGroupName'
+    type: string
     
+variables:
+  - group: '${{ parameters.VariableGroupName }}'
+
 jobs:
 - job: '${{ parameters.DisplayName }}'
   timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
   cancelTimeoutInMinutes: 2
-  pool: MyPool
+  pool: '$(PoolName)'
   steps:
     - checkout: self
       fetchDepth: 0
@@ -49,6 +55,6 @@ jobs:
 
     - task: CmdLine@2
       inputs:
-        script: 'DbUp-POC.exe clean -c "${{ parameters.ConnectionString }}" -f "${{ parameters.FolderName }}"'
+        script: 'DbUp-POC.exe clean -c "$(ConnectionString)" -f "${{ parameters.FolderName }}"'
         workingDirectory: '$(Build.SourcesDirectory)/net8.0'
         failOnStderr: true
