@@ -150,6 +150,8 @@ stages:
       pool: $(PoolName)
     - template: clean.yaml
       parameters:
+        PoolName: $(PoolName)
+        ConnectionString: $(ConnectionString)
         FolderName: '${{ parameters.FolderName }}'
         TimeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
         ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
@@ -170,6 +172,8 @@ stages:
       pool: $(PoolName)
     - template: clean.yaml
       parameters:
+        PoolName: $(PoolName)
+        ConnectionString: $(ConnectionString)
         FolderName: '${{ parameters.FolderName }}'
         TimeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
         ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
