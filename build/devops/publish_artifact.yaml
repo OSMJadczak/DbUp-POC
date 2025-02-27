@@ -127,7 +127,7 @@ stages:
         ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
         FeedPackageName: '${{ parameters.FeedPackageName }}'
 - stage: 'QA1_DatabaseClean'
-  displayName: 'Cleanup of DEV1 database'
+  displayName: 'Cleanup of QA1 database'
   dependsOn: 'QA1_DatabaseUpgrade'
   jobs:
     - deployment: Deployment
