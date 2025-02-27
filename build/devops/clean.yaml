@@ -1,34 +1,38 @@
 parameters:
-  - name: 'FolderName'
-    type: string
-    default: "./targetproject2"
+- name: 'PoolName'
+  type: string
 
-  - name: 'TimeoutInMinutes'
-    type: number
-    default: 20
-  
-  - name: 'ArtifactFeedName'
-    type: string
-    default: 'DefaultFeed'
+- name: 'ConnectionString'
+  type: string
 
-  - name: 'FeedPackageName'
-    type: string
-    default: 'dbupgrade'
+- name: 'FolderName'
+  type: string
+  default: "./targetproject2"
 
-  - name: 'DisplayName'
-    type: string
-    default: 'Database upgrade'
+- name: 'TimeoutInMinutes'
+  type: number
+  default: 20
 
-  - name: 'VariableGroupName'
-    type: string
+- name: 'ArtifactFeedName'
+  type: string
+  default: 'DefaultFeed'
+
+- name: 'FeedPackageName'
+  type: string
+  default: 'dbupgrade'
+
+- name: 'DisplayName'
+  type: string
+  default: 'Database upgrade'
+
+- name: 'VariableGroupName'
+  type: string
 
 jobs:
 - job: '${{ parameters.DisplayName }}'
   timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
   cancelTimeoutInMinutes: 2
-  variables:
-    - group: '${{ parameters.VariableGroupName }}'
-  pool: '$(PoolName)'
+  pool: '${{ parameters.PoolName }}'
   steps:
     - checkout: self
       fetchDepth: 0
@@ -50,6 +54,6 @@ jobs:
 
     - task: CmdLine@2
       inputs:
-        script: 'DbUp-POC.exe clean -c "$(ConnectionString)" -f "${{ parameters.FolderName }}"'
+        script: 'DbUp-POC.exe clean -c "${{ parameters.ConnectionString }}" -f "${{ parameters.FolderName }}"'
         workingDirectory: '$(Build.SourcesDirectory)/net8.0'
         failOnStderr: true

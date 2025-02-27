@@ -89,24 +89,39 @@ stages:
   jobs:
     - deployment: Deployment
       environment: 'DEV1'
-      pool: MyPool
+      pool: $(PoolName)
+      variables:
+        - group: 'DEV1-DatabaseUpgrade'
+        - name: 'ConnectionString'
+          value: $(ConnectionString)
+        - name: 'PoolName'
+          value: $(PoolName)
     - template: upgrade.yaml
       parameters:
+        PoolName: $(PoolName)
+        ConnectionString: $(ConnectionString)
         FolderName: '${{ parameters.FolderName }}'
         TimeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
         ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
         FeedPackageName: '${{ parameters.FeedPackageName }}'
         DisplayName: 'DEV1_Upgrade'
-        VariableGroupName: 'DEV1-DatabaseUpgrade'
 - stage: 'QA1_DatabaseUpgrade'
   displayName: 'Upgrade QA1'
   dependsOn: 'DEV1_DatabaseUpgrade'
   jobs:
     - deployment: Deployment
       environment: 'QA1'
-      pool: MyPool
+      pool: $(PoolName)
+      variables:
+        - group: 'DEV1-DatabaseUpgrade'
+        - name: 'ConnectionString'
+          value: $(ConnectionString)
+        - name: 'PoolName'
+          value: $(PoolName)
     - template: upgrade.yaml
       parameters:
+        PoolName: $(PoolName)
+        ConnectionString: $(ConnectionString)
         FolderName: '${{ parameters.FolderName }}'
         TimeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
         ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
@@ -119,6 +134,7 @@ stages:
   jobs:
     - deployment: Deployment
       environment: 'QA1'
+      pool: MyPool
     - template: clean.yaml
       parameters:
         FolderName: '${{ parameters.FolderName }}'
@@ -133,6 +149,7 @@ stages:
   jobs:
     - deployment: Deployment
       environment: 'DEV1'
+      pool: MyPool
     - template: clean.yaml
       parameters:
         FolderName: '${{ parameters.FolderName }}'

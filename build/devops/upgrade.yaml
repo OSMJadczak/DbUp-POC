@@ -1,4 +1,10 @@
 parameters:
+- name: 'PoolName'
+  type: string
+
+- name: 'ConnectionString'
+  type: string
+
 - name: 'FolderName'
   type: string
   default: "./targetproject2"
@@ -19,16 +25,11 @@ parameters:
   type: string
   default: 'Database upgrade'
 
-- name: 'VariableGroupName'
-  type: string
-
 jobs:
 - job: '${{ parameters.DisplayName }}'
   timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
   cancelTimeoutInMinutes: 2
-  pool: $(PoolName)
-  variables:
-    - group: '${{ parameters.VariableGroupName }}'
+  pool: '${{ parameters.PoolName }}'
   steps:
     - checkout: self
       fetchDepth: 0
@@ -50,6 +51,6 @@ jobs:
 
     - task: CmdLine@2
       inputs:
-        script: 'DbUp-POC.exe upgrade -c "$(ConnectionString)" -f "${{ parameters.FolderName }}"'
+        script: 'DbUp-POC.exe upgrade -c "${{ parameters.ConnectionString }}" -f "${{ parameters.FolderName }}"'
         workingDirectory: '$(Build.SourcesDirectory)/net8.0'
         failOnStderr: true
