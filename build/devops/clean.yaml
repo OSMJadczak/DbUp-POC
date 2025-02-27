@@ -18,9 +18,13 @@ parameters:
   - name: 'FeedPackageName'
     type: string
     default: 'dbupgrade'
+
+  - name: 'DisplayName'
+    type: string
+    default: 'Database upgrade'
     
 jobs:
-- job:
+- job: '${{ parameters.DisplayName }}'
   timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
   cancelTimeoutInMinutes: 2
   pool: MyPool
