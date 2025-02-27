@@ -97,13 +97,13 @@ stages:
   jobs:
     - deployment: Deployment
       environment: 'DEV1'
-      pool: $(PoolName)
       variables:
         - group: '${{ parameters.DEV1_VariableGroupName }}'
         - name: 'ConnectionString'
           value: $(ConnectionString)
         - name: 'PoolName'
           value: $(PoolName)
+      pool: $(PoolName)
     - template: upgrade.yaml
       parameters:
         PoolName: $(PoolName)
@@ -119,13 +119,13 @@ stages:
   jobs:
     - deployment: Deployment
       environment: 'QA1'
-      pool: $(PoolName)
       variables:
         - group: '${{ parameters.QA1_VariableGroupName }}'
         - name: 'ConnectionString'
           value: $(ConnectionString)
         - name: 'PoolName'
           value: $(PoolName)
+      pool: $(PoolName)
     - template: upgrade.yaml
       parameters:
         PoolName: $(PoolName)
@@ -141,13 +141,13 @@ stages:
   jobs:
     - deployment: Deployment
       environment: 'QA1'
-      pool: $(PoolName)
       variables:
         - group: '${{ parameters.QA1_VariableGroupName }}'
         - name: 'ConnectionString'
           value: $(ConnectionString)
         - name: 'PoolName'
           value: $(PoolName)
+      pool: $(PoolName)
     - template: clean.yaml
       parameters:
         FolderName: '${{ parameters.FolderName }}'
@@ -161,13 +161,13 @@ stages:
   jobs:
     - deployment: Deployment
       environment: 'DEV1'
-      pool: $(PoolName)
       variables:
         - group: '${{ parameters.DEV1_VariableGroupName }}'
         - name: 'ConnectionString'
           value: $(ConnectionString)
         - name: 'PoolName'
           value: $(PoolName)
+      pool: $(PoolName)
     - template: clean.yaml
       parameters:
         FolderName: '${{ parameters.FolderName }}'
