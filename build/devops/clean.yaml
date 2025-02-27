@@ -3,10 +3,6 @@ parameters:
     type: string
     default: "./targetproject2"
 
-  - name: 'ConnectionString'
-    type: string
-    default: "Data Source=127.0.0.1,5001;Initial Catalog=test;User ID=sa;Password=Strong_password_123!;Integrated Security=false;Trust Server Certificate=true"
-  
   - name: 'TimeoutInMinutes'
     type: number
     default: 20
