@@ -101,11 +101,37 @@ stages:
         ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
         FeedPackageName: '${{ parameters.FeedPackageName }}'
 - stage: 'DEV1_DatabaseClean'
-  displayName: 'Cleanup of database'
+  displayName: 'Cleanup of DEV1 database'
   dependsOn: 'DEV1_DatabaseUpgrade'
   jobs:
     - deployment: Deployment
       environment: 'DEV1'
+    - template: clean.yaml
+      parameters:
+        FolderName: '${{ parameters.FolderName }}'
+        ConnectionString: '${{ parameters.ConnectionString }}'
+        TimeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
+        ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
+        FeedPackageName: '${{ parameters.FeedPackageName }}'
+- stage: 'QA1_DatabaseUpgrade'
+  displayName: 'Upgrade QA1'
+  dependsOn: 'DEV1_DatabaseUpgrade'
+  jobs:
+    - deployment: Deployment
+      environment: 'QA1'
+    - template: upgrade.yaml
+      parameters:
+        FolderName: '${{ parameters.FolderName }}'
+        ConnectionString: '${{ parameters.ConnectionString }}'
+        TimeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
+        ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
+        FeedPackageName: '${{ parameters.FeedPackageName }}'
+- stage: 'QA1_DatabaseClean'
+  displayName: 'Cleanup of DEV1 database'
+  dependsOn: 'QA1_DatabaseUpgrade'
+  jobs:
+    - deployment: Deployment
+      environment: 'QA1'
     - template: clean.yaml
       parameters:
         FolderName: '${{ parameters.FolderName }}'
