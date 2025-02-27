@@ -25,9 +25,6 @@ parameters:
   type: string
   default: 'Database upgrade'
 
-- name: 'VariableGroupName'
-  type: string
-
 jobs:
 - job: '${{ parameters.DisplayName }}'
   timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'

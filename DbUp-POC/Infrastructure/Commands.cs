@@ -133,10 +133,10 @@ namespace DbUp_POC.Infrastructure
                 folder = Path.Combine(Directory.GetCurrentDirectory(), folder);
                 var pathResult = Helpers.CheckIfPathExists(folder, false);
 
-                if (!pathResult.Item1 || Directory.GetFiles(pathResult.Item2).Length == 0)
+                if (!pathResult.Item1 || Directory.GetFiles(pathResult.Item2, "*.sql").Length == 0)
                 {
                     Console.WriteLine("Path does not exist or does not contain any files. Exiting.");
-                    return;
+                    Environment.Exit(1);
                 }
 
                 Console.WriteLine(pathResult.Item2);

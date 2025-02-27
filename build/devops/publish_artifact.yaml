@@ -35,6 +35,14 @@ parameters:
     type: string
     default: 'MyPool'
 
+  - name: 'QA1_VariableGroupName'
+    type: string
+    default: 'QA1-DatabaseUpgrade'
+  
+  - name: 'DEV1_VariableGroupName'
+    type: string  
+    default: 'DEV1-DatabaseUpgrade'
+
 stages:
 - stage: PublishArtifact
   pool: MyPool
@@ -91,7 +99,7 @@ stages:
       environment: 'DEV1'
       pool: $(PoolName)
       variables:
-        - group: 'DEV1-DatabaseUpgrade'
+        - group: '${{ parameters.DEV1_VariableGroupName }}'
         - name: 'ConnectionString'
           value: $(ConnectionString)
         - name: 'PoolName'
@@ -113,7 +121,7 @@ stages:
       environment: 'QA1'
       pool: $(PoolName)
       variables:
-        - group: 'DEV1-DatabaseUpgrade'
+        - group: '${{ parameters.QA1_VariableGroupName }}'
         - name: 'ConnectionString'
           value: $(ConnectionString)
         - name: 'PoolName'
@@ -127,14 +135,19 @@ stages:
         ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
         FeedPackageName: '${{ parameters.FeedPackageName }}'
         DisplayName: 'QA1_Upgrade'
-        VariableGroupName: 'QA1-DatabaseUpgrade'
 - stage: 'QA1_DatabaseClean'
   displayName: 'Cleanup of QA1 database'
   dependsOn: 'QA1_DatabaseUpgrade'
   jobs:
     - deployment: Deployment
       environment: 'QA1'
-      pool: MyPool
+      pool: $(PoolName)
+      variables:
+        - group: '${{ parameters.QA1_VariableGroupName }}'
+        - name: 'ConnectionString'
+          value: $(ConnectionString)
+        - name: 'PoolName'
+          value: $(PoolName)
     - template: clean.yaml
       parameters:
         FolderName: '${{ parameters.FolderName }}'
@@ -142,14 +155,19 @@ stages:
         ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
         FeedPackageName: '${{ parameters.FeedPackageName }}'
         DisplayName: 'QA1_Clean'
-        VariableGroupName: 'QA1-DatabaseUpgrade'
 - stage: 'DEV1_DatabaseClean'
   displayName: 'Cleanup of DEV1 database'
   dependsOn: 'DEV1_DatabaseUpgrade'
   jobs:
     - deployment: Deployment
       environment: 'DEV1'
-      pool: MyPool
+      pool: $(PoolName)
+      variables:
+        - group: '${{ parameters.DEV1_VariableGroupName }}'
+        - name: 'ConnectionString'
+          value: $(ConnectionString)
+        - name: 'PoolName'
+          value: $(PoolName)
     - template: clean.yaml
       parameters:
         FolderName: '${{ parameters.FolderName }}'
@@ -157,4 +175,3 @@ stages:
         ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
         FeedPackageName: '${{ parameters.FeedPackageName }}'
         DisplayName: 'DEV1_Clean'
-        VariableGroupName: 'DEV1-DatabaseUpgrade'
