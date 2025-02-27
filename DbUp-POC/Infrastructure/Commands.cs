@@ -65,7 +65,15 @@ namespace DbUp_POC.Infrastructure
 
                 engine.PerformUpgrade();
 
-                Console.WriteLine("Database upgraded successfully.");
+                if (engine.UpgradeEngine.GetScriptsToExecute().Count == 0)
+                {
+                    Console.WriteLine("Database upgraded successfully.");
+                }
+                else
+                {
+                    Console.WriteLine("Updates could not complete and were rolled back.");
+                    Environment.Exit(1);
+                }
             }, scriptsPathOption, connectionStringOption);
 
             return upgradeCommand;
