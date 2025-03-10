@@ -1,6 +1,0 @@
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE name = 'People' AND type='U')
-
-CREATE TABLE People (
-[Id] INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-[FirstName] VARCHAR(30) NOT NULL,
-[LastName] VARCHAR(30) NOT NULL)

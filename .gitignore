@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Folder with ALL scripts except the project we want
+DbUp-POC/Scripts/*
+!DbUp-POC/Scripts/20250310-WantedProject

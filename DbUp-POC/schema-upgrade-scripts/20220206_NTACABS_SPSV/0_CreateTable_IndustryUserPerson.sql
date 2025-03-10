@@ -1,0 +1,48 @@
+USE [cabs_production]
+GO
+
+/****** Object:  Table [cabs_spsv].[IndustryUserPerson]    Script Date: 02.06.2022 10:22:06 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [cabs_spsv].[IndustryUserPerson](
+	[IndustryUserId] [bigint] NOT NULL,
+	[PersonId] [int] NOT NULL,
+ CONSTRAINT [PK_IndustryUserPerson] PRIMARY KEY CLUSTERED 
+(
+	[IndustryUserId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+ CONSTRAINT [UQ_IndustryUserPerson_IndustryUserId_PersonId] UNIQUE NONCLUSTERED 
+(
+	[IndustryUserId] ASC,
+	[PersonId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+CONSTRAINT [UQ_IndustryUserPerson_IndustryUserId] UNIQUE NONCLUSTERED 
+(
+	[IndustryUserId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+CONSTRAINT [UQ_IndustryUserPerson_PersonId] UNIQUE NONCLUSTERED 
+(
+	[PersonId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [cabs_spsv].[IndustryUserPerson]  WITH CHECK ADD  CONSTRAINT [FK_IndustryUserPerson_IndustryUser] FOREIGN KEY([IndustryUserId])
+REFERENCES [cabs_cmo].[IndustryUser] ([ID])
+GO
+
+ALTER TABLE [cabs_spsv].[IndustryUserPerson] CHECK CONSTRAINT [FK_IndustryUserPerson_IndustryUser]
+GO
+
+ALTER TABLE [cabs_spsv].[IndustryUserPerson]  WITH CHECK ADD  CONSTRAINT [FK_IndustryUserPerson_Person] FOREIGN KEY([PersonId])
+REFERENCES [person].[Person] ([PersonId])
+GO
+
+ALTER TABLE [cabs_spsv].[IndustryUserPerson] CHECK CONSTRAINT [FK_IndustryUserPerson_Person]
+GO
+
+
