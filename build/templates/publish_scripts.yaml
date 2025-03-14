@@ -30,7 +30,7 @@ jobs:
       - powershell: Write-Host '##vso[task.setvariable variable=projectName;isOutput=true]${{ parameters.ScriptsDirectory }} -split "_"[1]'
         name: 'SplitProjectName'
       
-      - powershell: echo ${variables.ProjectName}
+      - powershell: Write-Host '##vso[echo ${variables.ProjectName}]'
         name: 'Project_name'
 
       - task: ArchiveFiles@2
