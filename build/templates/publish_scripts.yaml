@@ -32,6 +32,10 @@ jobs:
       
       - powershell: Write-Host '##vso[echo ${variables.ProjectName}]'
         name: 'Project_name'
+      
+      - powershell: Write-Host "##vso[task.setvariable variable=testvar;]testvalue"
+
+      - powershell: Write-Host '##vso[echo ${testVar}]'
 
       - task: ArchiveFiles@2
         displayName: 'Archive script files'
