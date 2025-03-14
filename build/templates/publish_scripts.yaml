@@ -33,7 +33,7 @@ jobs:
       - powershell: Write-Host ${projectName}
         name: 'Project_name'
         
-      - powershell: Write-Host "##vso[task.setvariable variable=myVar]foo"
+      - powershell: ##vso[task.setvariable variable=myVar]foo
         name: 'SplitProjectName2'
       
       - powershell: Write-Host ${myVar}
