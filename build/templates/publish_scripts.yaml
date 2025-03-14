@@ -35,7 +35,10 @@ jobs:
       #   name: 'Project_name'
       
       - powershell: |
-          Write-Host "##vso[task.setvariable variable=projectName;]${{ parameters.ScriptsDirectory }} -split "_"[1]"
+          Write-Host '##vso[$projectName = ${{ parameters.ScriptsDirectory }} -split "_"[1]'
+
+      - powershell: |
+          Write-Host "##vso[task.setvariable variable=projectName;]$projectName"
 
       - powershell: |
           Write-Host "You can use macro syntax for variables: $(projectName)"
