@@ -21,6 +21,8 @@ jobs:
     displayName: 'Publish scripts for Database Upgrade'
     timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
     cancelTimeoutInMinutes: 2
+    variables:
+      - name: 'projectName'
     steps:
       - checkout: self
         fetchDepth: 0
@@ -44,6 +46,6 @@ jobs:
           command: publish
           publishDirectory: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
           vstsFeedPublish: 'dbupgrade-poc/${{ parameters.ArtifactFeedName }}'
-          vstsFeedPackagePublish: '${projectName}'
+          vstsFeedPackagePublish: '${variables.projectName}'
           versionPublish: '$(package_version)'
           packagePublishDescription: 'Scripts for ${{ parameters.ScriptsDirectory }}.'
