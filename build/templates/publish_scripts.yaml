@@ -32,6 +32,12 @@ jobs:
       
       - powershell: Write-Host ${projectName}
         name: 'Project_name'
+        
+      - powershell: Write-Host "##vso[task.setvariable variable=myVar;]foo"
+        name: 'SplitProjectName2'
+      
+      - powershell: Write-Host ${myVar}
+        name: 'Project_name2'
 
       - task: ArchiveFiles@2
         displayName: 'Archive script files'
