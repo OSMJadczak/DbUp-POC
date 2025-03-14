@@ -1,0 +1,1 @@
+-- no changes needed, script 8_VLS_AddFPNLetterRequestType will delete all records

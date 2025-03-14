@@ -1,0 +1,3 @@
+-- script was ran on all environments (during Online Register release day to production)
+-- no need to revert
+-- script was used during developement process - parts MR2 depends on new fields added on OR (concrete: PersonId), see 20230216_NTACABS_OR2023/19_WatRegister_Add_PersonId.sql

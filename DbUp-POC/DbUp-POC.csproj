@@ -9,7 +9,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="targetproject2\up\99999-error.sql" />
+    <Compile Remove="DbProcedures\**" />
+    <Compile Remove="dbSchema\**" />
+    <Compile Remove="maintenance\**" />
+    <Compile Remove="schema-upgrade-scripts\**" />
+    <Compile Remove="SQL Job Agent\**" />
+    <EmbeddedResource Remove="DbProcedures\**" />
+    <EmbeddedResource Remove="dbSchema\**" />
+    <EmbeddedResource Remove="maintenance\**" />
+    <EmbeddedResource Remove="schema-upgrade-scripts\**" />
+    <EmbeddedResource Remove="SQL Job Agent\**" />
+    <None Remove="DbProcedures\**" />
+    <None Remove="dbSchema\**" />
+    <None Remove="maintenance\**" />
+    <None Remove="schema-upgrade-scripts\**" />
+    <None Remove="SQL Job Agent\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,147 +37,16 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="init\00002-Init-table.sql">
+    <None Update="Scripts\20250310-WantedProject\up\99999-error.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="init\00003-InitView.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="init\00004-InitProc.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="init\00005-Init-index.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\cleanup\00001-remove-tabletoadjust-backup.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\cleanup\00002-remove-items-backup.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\cleanup\00003-remove-tabletodrop-backup.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\down\00001-Create-table.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\down\00002-Update-table-add-column.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\down\00003-Column-drop.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\down\00004-Alter-table-rename-column.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\down\00005-Alter-table-rename.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\down\00006-Alter-table-change-column-datatype.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\down\00007-Table-drop.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\down\00008-Create-index.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\down\00009-Drop-index.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\down\00010-Rename-index.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\down\00011-Create-view.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\down\00012-alter-view.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\down\00013-rename-view.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\down\00014-drop-view.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\down\00015-Create-procedure.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\down\00016-Drop-procedure.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\down\00017-Alter-procedure-params.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\down\00018-Alter-procedure-inside.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\init\00002-Init-table.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\init\00003-InitView.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\init\00004-InitProc.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\init\00005-Init-index.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\up\00001-Create-table.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\up\00002-Update-table-add-column.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\up\00003-Column-drop.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\up\00004-Alter-table-rename-column.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\up\00005-Alter-table-rename.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\up\00006-Alter-table-change-column-datatype.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\up\00007-Table-drop.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\up\00008-Create-index.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\up\00009-Drop-index.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\up\00010-Rename-index.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\up\00011-Create-view.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\up\00012-alter-view.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\up\00013-rename-view.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\up\00014-drop-view.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\up\00015-Create-procedure.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\up\00016-Drop-procedure.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\up\00017-Alter-procedure-params.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="targetproject2\up\00018-Alter-procedure-inside.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Scripts\20250310-UnwantedProject\cleanup\" />
+    <Folder Include="Scripts\20250310-UnwantedProject\down\" />
+    <Folder Include="Scripts\20250310-WantedProject\cleanup\" />
+    <Folder Include="Scripts\20250310-WantedProject\down\" />
   </ItemGroup>
 
 </Project>

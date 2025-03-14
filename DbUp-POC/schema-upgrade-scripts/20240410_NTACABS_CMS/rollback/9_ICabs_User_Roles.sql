@@ -1,0 +1,1 @@
+EXEC [dbo].[aspnet_UsersInRoles_RemoveUsersFromRoles] 'cabs', 'icasb_user', 'backgroundservice'
