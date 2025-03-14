@@ -37,7 +37,7 @@ jobs:
       - task: PowerShell@2
         inputs:
           targetType: inline
-          script: '##vso[task.setvariable variable=myVar]foo'
+          script: Write-Host '##vso[task.setvariable variable=myVar]foo'
 
       - task: PowerShell@2
         inputs:
