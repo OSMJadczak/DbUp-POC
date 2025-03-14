@@ -28,21 +28,17 @@ jobs:
       - checkout: self
         fetchDepth: 0
         
-      - powershell: Write-Host '##vso[task.setvariable variable=projectName;isOutput=true]${{ parameters.ScriptsDirectory }} -split "_"[1]'
-        name: 'SplitProjectName'
+      # - powershell: Write-Host '##vso[task.setvariable variable=projectName;isOutput=true]${{ parameters.ScriptsDirectory }} -split "_"[1]'
+      #   name: 'SplitProjectName'
       
-      - powershell: Write-Host ${projectName}
-        name: 'Project_name'
-        
-      - task: PowerShell@2
-        inputs:
-          targetType: inline
-          script: Write-Host '##vso[task.setvariable variable=myVar]foo'
+      # - powershell: Write-Host ${projectName}
+      #   name: 'Project_name'
+      
+      - powershell: |
+          Write-Host "##vso[task.setvariable variable=myVar;]foo"
 
-      - task: PowerShell@2
-        inputs:
-          targetType: inline
-          script: Write-Host '##vso[${variables.myVar}]'
+      - powershell: |
+          Write-Host "You can use macro syntax for variables: $(myVar)"
 
       - task: ArchiveFiles@2
         displayName: 'Archive script files'
