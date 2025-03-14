@@ -35,7 +35,7 @@ jobs:
       #   name: 'Project_name'
 
       - powershell: |
-          $projectName = "${{ parameters.ScriptsDirectory }}" -split "_"[1]
+          $projectName = "${{ parameters.ScriptsDirectory }}".split("_")[1]
           Write-Host "##vso[task.setvariable variable=projectName;]$projectName"
 
       - powershell: |
