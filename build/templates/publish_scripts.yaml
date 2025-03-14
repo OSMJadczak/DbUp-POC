@@ -27,7 +27,7 @@ jobs:
     steps:
       - checkout: self
         fetchDepth: 0
-        
+
       - powershell: |
           $projectName = "${{ parameters.ScriptsDirectory }}".split("_")[1]
           Write-Host "##vso[task.setvariable variable=projectName;]$projectName"
@@ -43,7 +43,7 @@ jobs:
         displayName: 'Publish scripts as artifact'
         inputs:
           command: publish
-          publishDirectory: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+          publishDirectory: '$(Build.ArtifactStagingDirectory)/$(projectName).zip'
           vstsFeedPublish: 'dbupgrade-poc/${{ parameters.ArtifactFeedName }}'
           vstsFeedPackagePublish: '${projectName}'
           versionPublish: '$(package_version)'
