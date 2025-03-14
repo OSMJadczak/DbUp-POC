@@ -30,7 +30,7 @@ jobs:
       - task: ArchiveFiles@2
         displayName: 'Archive script files'
         inputs:
-          rootFolderOrFile: '$(System.DefaultWorkingDirectory)/DbUp-POC/Scripts/${variables.projectName}'
+          rootFolderOrFile: '$(System.DefaultWorkingDirectory)/DbUp-POC/Scripts/${projectName}'
           archiveType: 'zip'
           archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
 
@@ -40,6 +40,6 @@ jobs:
           command: publish
           publishDirectory: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
           vstsFeedPublish: 'dbupgrade-poc/${{ parameters.ArtifactFeedName }}'
-          vstsFeedPackagePublish: '${variables.projectName}'
+          vstsFeedPackagePublish: '${projectName}'
           versionPublish: '$(package_version)'
           packagePublishDescription: 'Scripts for ${{ parameters.ScriptsDirectory }}.'
