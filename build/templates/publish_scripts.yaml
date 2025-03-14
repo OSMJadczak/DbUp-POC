@@ -24,11 +24,11 @@ jobs:
     steps:
       - checkout: self
         fetchDepth: 0
-
+        
       - task: ArchiveFiles@2
         displayName: 'Archive script files'
         inputs:
-          rootFolderOrFile: '$(System.DefaultWorkingDirectory)/DbUp-POC/Scripts/${{ parameters.ScriptsDirectory}}'
+          rootFolderOrFile: '$(System.DefaultWorkingDirectory)/DbUp-POC/Scripts/${{ parameters.ScriptsDirectory }}'
           archiveType: 'zip'
           archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
 
