@@ -22,7 +22,7 @@ jobs:
     timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
     cancelTimeoutInMinutes: 2
     variables:
-      - name: 'projectName'
+      - name: 'myVar'
     steps:
       - checkout: self
         fetchDepth: 0
