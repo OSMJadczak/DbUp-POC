@@ -9,7 +9,7 @@ parameters:
 
   - name: 'ScriptsDirectory'
     type: string
-    default: '20250310-WantedProject'
+    default: '20250310_WantedProject'
   
   - name: 'ArtifactFeedName'
     type: string
