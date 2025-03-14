@@ -22,7 +22,7 @@ jobs:
     timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
     cancelTimeoutInMinutes: 2
     variables:
-      - name: 'myVar'
+      - name: 'projectName'
         value: 'unset'
     steps:
       - checkout: self
@@ -38,7 +38,7 @@ jobs:
           Write-Host "##vso[task.setvariable variable=projectName;]${{ parameters.ScriptsDirectory }}"
 
       - powershell: |
-          Write-Host "You can use macro syntax for variables: $(myVar)"
+          Write-Host "You can use macro syntax for variables: $(projectName)"
 
       - task: ArchiveFiles@2
         displayName: 'Archive script files'
