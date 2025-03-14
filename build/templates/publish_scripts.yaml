@@ -13,11 +13,7 @@ parameters:
   
   - name: 'ArtifactFeedName'
     type: string
-    default: 'DefaultFeed'
-
-  - name: 'FeedPackageName'
-    type: string
-    default: 'dbupgrade-scripts'
+    default: 'ScriptsFeed'
 
 jobs:
   - job: ArtifactPublish
@@ -41,7 +37,7 @@ jobs:
         inputs:
           command: publish
           publishDirectory: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-          vstsFeedPublish: 'dbupgrade-poc/${{ parameters.ArtifactFeedName }}/${{ parameters.ScriptsDirectory }}'
-          vstsFeedPackagePublish: '${{ parameters.FeedPackageName }}'
+          vstsFeedPublish: 'dbupgrade-poc/${{ parameters.ArtifactFeedName }}'
+          vstsFeedPackagePublish: '${{ parameters.ScriptsDirectory }}'
           versionPublish: '$(package_version)'
           packagePublishDescription: 'Scripts for ${{ parameters.ScriptsDirectory }}.'
