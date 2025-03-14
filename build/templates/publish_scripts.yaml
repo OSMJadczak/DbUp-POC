@@ -29,6 +29,7 @@ jobs:
         displayName: 'Archive script files'
         inputs:
           rootFolderOrFile: '$(System.DefaultWorkingDirectory)/DbUp-POC/Scripts/${{ parameters.ScriptsDirectory}}'
+          includeRootFolder: false
           archiveType: 'zip'
           archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
 
