@@ -37,16 +37,6 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Scripts\20250310-WantedProject\up\99999-error.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Scripts\20250310-UnwantedProject\cleanup\" />
-    <Folder Include="Scripts\20250310-UnwantedProject\down\" />
-    <Folder Include="Scripts\20250310-WantedProject\cleanup\" />
-    <Folder Include="Scripts\20250310-WantedProject\down\" />
   </ItemGroup>
 
 </Project>
