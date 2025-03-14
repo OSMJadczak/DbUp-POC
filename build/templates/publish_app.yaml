@@ -5,15 +5,19 @@ parameters:
 
   - name: 'NugetConfigPath'
     type: string
+    default: '$(System.DefaultWorkingDirectory)/nuget.config'
 
   - name: 'SolutionPath'
     type: string
+    default: 'DbUp-POC.sln'
   
   - name: 'ArtifactFeedName'
     type: string
+    default: 'DefaultFeed'
 
   - name: 'FeedPackageName'
     type: string
+    default: 'dbupgrade-app'
 
 jobs:
   - job: ArtifactPublish
@@ -55,7 +59,5 @@ jobs:
           publishDirectory: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
           vstsFeedPublish: 'dbupgrade-poc/${{ parameters.ArtifactFeedName }}'
           vstsFeedPackagePublish: '${{ parameters.FeedPackageName }}'
-          version: custom
           versionPublish: '$(package_version)'
           packagePublishDescription: 'Database updater of run ${Build.BuildId} run by ${Build.QueuedBy}.'
-        deploymentOutputs: vstsFeedPackagePublish
