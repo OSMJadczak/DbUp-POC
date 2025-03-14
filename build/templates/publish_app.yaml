@@ -18,6 +18,7 @@ parameters:
 jobs:
   - job: ArtifactPublish
     displayName: 'Publish Database Upgrade application'
+    pool: MyPool
     timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
     cancelTimeoutInMinutes: 2
     steps:
