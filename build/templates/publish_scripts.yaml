@@ -28,7 +28,7 @@ jobs:
       - powershell: Write-Host '##vso[task.setvariable variable=projectName;isOutput=true]${{ parameters.ScriptsDirectory }} -split "_"[1]'
         name: 'SplitProjectName'
       
-      - powershell: echo $[ dependencies.Storage.outputs[SplitProjectName.projectName] ]
+      - powershell: echo ${variables.ProjectName}
         name: 'Project_name'
 
       - task: ArchiveFiles@2
