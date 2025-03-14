@@ -5,15 +5,19 @@ parameters:
 
   - name: 'NugetConfigPath'
     type: string
+    default: '$(System.DefaultWorkingDirectory)/nuget.config'
 
   - name: 'ScriptsDirectory'
     type: string
+    default: '20250310-WantedProject'
   
   - name: 'ArtifactFeedName'
     type: string
+    default: 'DefaultFeed'
 
   - name: 'FeedPackageName'
     type: string
+    default: 'dbupgrade-scripts'
 
 jobs:
   - job: ArtifactPublish
