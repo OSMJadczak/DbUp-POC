@@ -36,7 +36,7 @@ jobs:
       - task: ArchiveFiles@2
         displayName: 'Archive script files'
         inputs:
-          rootFolderOrFile: '$(System.DefaultWorkingDirectory)/DbUp-POC/Scripts/${projectName}'
+          rootFolderOrFile: '$(System.DefaultWorkingDirectory)/DbUp-POC/Scripts/${variables.projectName}'
           archiveType: 'zip'
           archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
 
