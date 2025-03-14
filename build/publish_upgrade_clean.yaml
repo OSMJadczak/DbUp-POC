@@ -1,0 +1,145 @@
+parameters:
+  - name: 'FolderName'
+    type: string
+    default: "./DatabaseManagement/UpgradeScripts/20250310-WantedProject"
+
+  - name: 'TimeoutInMinutes'
+    type: number
+    default: 20
+
+  - name: 'NugetConfigPath'
+    type: string
+    default: '$(System.DefaultWorkingDirectory)/nuget.config'
+
+  - name: 'VmImage'
+    type: string
+    default: 'ubuntu-latest'
+
+  - name: 'SolutionPath'
+    type: string
+    default: 'database-dbup.sln'
+
+  - name: 'ProjectName'
+    type: string
+    default: 'DbUpgradePOC'
+  
+  - name: 'ArtifactFeedName'
+    type: string
+    default: 'DefaultFeed'
+
+  - name: 'FeedPackageName'
+    type: string
+    default: 'dbupgrade'
+
+  - name: 'QA1_VariableGroupName'
+    type: string
+    default: 'QA1-DatabaseUpgrade'
+  
+  - name: 'DEV1_VariableGroupName'
+    type: string  
+    default: 'DEV1-DatabaseUpgrade'
+
+stages:
+- stage: PublishArtifact
+  pool: Default
+  displayName: 'Publish artifact'
+  jobs:
+    - template: templates/publish_artifact.yaml
+      parameters:
+        TimeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
+        NugetConfigPath: '${{ parameters.NugetConfigPath }}'
+        SolutionPath: '${{ parameters.SolutionPath }}'
+        ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
+        FeedPackageName: '${{ parameters.FeedPackageName }}'
+- stage: 'DEV1_DatabaseUpgrade'
+  displayName: 'Upgrade dev1'
+  dependsOn: 'PublishArtifact'
+  jobs:
+    - deployment: Deployment
+      environment: 'DEV1'
+      variables:
+        - group: '${{ parameters.DEV1_VariableGroupName }}'
+        - name: 'ConnectionString'
+          value: $(ConnectionString)
+        - name: 'PoolName'
+          value: $(PoolName)
+      pool: $(PoolName)
+    - template: templates/upgrade.yaml
+      pool: $(PoolName)
+      parameters:
+        PoolName: $(PoolName)
+        ConnectionString: $(ConnectionString)
+        FolderName: '${{ parameters.FolderName }}'
+        TimeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
+        ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
+        FeedPackageName: '${{ parameters.FeedPackageName }}'
+        DisplayName: 'DEV1_Upgrade'
+- stage: 'QA1_DatabaseUpgrade'
+  displayName: 'Upgrade QA1'
+  dependsOn: 'DEV1_DatabaseUpgrade'
+  jobs:
+    - deployment: Deployment
+      environment: 'QA1'
+      variables:
+        - group: '${{ parameters.QA1_VariableGroupName }}'
+        - name: 'ConnectionString'
+          value: $(ConnectionString)
+        - name: 'PoolName'
+          value: $(PoolName)
+      pool: $(PoolName)
+    - template: templates/upgrade.yaml
+      pool: $(PoolName)
+      parameters:
+        PoolName: $(PoolName)
+        ConnectionString: $(ConnectionString)
+        FolderName: '${{ parameters.FolderName }}'
+        TimeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
+        ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
+        FeedPackageName: '${{ parameters.FeedPackageName }}'
+        DisplayName: 'QA1_Upgrade'
+- stage: 'QA1_DatabaseClean'
+  displayName: 'Cleanup of QA1 database'
+  dependsOn: 'QA1_DatabaseUpgrade'
+  jobs:
+    - deployment: Deployment
+      environment: 'QA1'
+      variables:
+        - group: '${{ parameters.QA1_VariableGroupName }}'
+        - name: 'ConnectionString'
+          value: $(ConnectionString)
+        - name: 'PoolName'
+          value: $(PoolName)
+      pool: $(PoolName)
+    - template: templates/clean.yaml
+      pool: $(PoolName)
+      parameters:
+        PoolName: $(PoolName)
+        ConnectionString: $(ConnectionString)
+        FolderName: '${{ parameters.FolderName }}'
+        TimeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
+        ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
+        FeedPackageName: '${{ parameters.FeedPackageName }}'
+        DisplayName: 'QA1_Clean'
+- stage: 'DEV1_DatabaseClean'
+  displayName: 'Cleanup of DEV1 database'
+  dependsOn: 'DEV1_DatabaseUpgrade'
+  jobs:
+    - deployment: Deployment
+      environment: 'DEV1'
+      variables:
+        - group: '${{ parameters.DEV1_VariableGroupName }}'
+        - name: 'ConnectionString'
+          value: $(ConnectionString)
+        - name: 'PoolName'
+          value: $(PoolName)
+      pool: $(PoolName)
+    - template: templates/clean.yaml
+      pool: $(PoolName)
+      parameters:
+        PoolName: $(PoolName)
+        ConnectionString: $(ConnectionString)
+        FolderName: '${{ parameters.FolderName }}'
+        TimeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
+        ArtifactFeedName: '${{ parameters.ArtifactFeedName }}'
+        FeedPackageName: '${{ parameters.FeedPackageName }}'
+        DisplayName: 'DEV1_Clean'

@@ -1,0 +1,55 @@
+parameters:
+- name: 'PoolName'
+  type: string
+
+- name: 'ConnectionString'
+  type: string
+
+- name: 'FolderName'
+  type: string
+
+- name: 'TimeoutInMinutes'
+  type: number
+  default: 20
+
+- name: 'ArtifactFeedName'
+  type: string
+  default: 'DefaultFeed'
+
+- name: 'FeedPackageName'
+  type: string
+  default: 'dbupgrade'
+
+- name: 'DisplayName'
+  type: string
+  default: 'Database upgrade'
+
+jobs:
+- job: '${{ parameters.DisplayName }}'
+  timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
+  cancelTimeoutInMinutes: 2
+  pool: '${{ parameters.PoolName }}'
+  steps:
+    - checkout: self
+      fetchDepth: 0
+
+    - task: UniversalPackages@0
+      displayName: Download a Universal Package
+      inputs:
+        command: download
+        vstsFeed: 'dbupgrade-poc/${{ parameters.ArtifactFeedName }}'
+        vstsFeedPackage: '${{ parameters.FeedPackageName }}'
+        vstsPackageVersion: '*'
+        downloadDirectory: '$(Build.SourcesDirectory)'
+
+    - task: ExtractFiles@1
+      inputs:
+        archiveFilePatterns: '$(Build.SourcesDirectory)/$(Build.BuildId).zip'
+        cleanDestinationFolder: false
+        overwriteExistingFiles: true
+
+    - task: CmdLine@2
+      inputs:
+        script: 'DbUp-POC.exe downgrade -c "${{ parameters.ConnectionString }}" -f "${{ parameters.FolderName }}"'
+        workingDirectory: '$(Build.SourcesDirectory)/net8.0'
+        failOnStderr: true
