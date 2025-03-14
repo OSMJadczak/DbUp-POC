@@ -39,7 +39,7 @@ jobs:
           targetType: inline
           script: '##vso[task.setvariable variable=myVar]foo'
 
-      - powershell: Write-Host ${myVar}
+      - powershell: Write-Host ${variables.myVar}
         name: 'Project_name2'
 
       - task: ArchiveFiles@2
