@@ -5,56 +5,39 @@ parameters:
 
   - name: 'NugetConfigPath'
     type: string
+    default: '$(System.DefaultWorkingDirectory)/nuget.config'
 
-  - name: 'SolutionPath'
+  - name: 'ScriptsDirectory'
     type: string
+    default: '20250310-WantedProject'
   
   - name: 'ArtifactFeedName'
     type: string
-
-  - name: 'FeedPackageName'
-    type: string
+    default: 'ScriptsFeed'
 
 jobs:
   - job: ArtifactPublish
-    displayName: 'Publish artifact for Database Upgrade'
+    pool: MyPool
+    displayName: 'Publish scripts for Database Upgrade'
     timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
     cancelTimeoutInMinutes: 2
     steps:
       - checkout: self
         fetchDepth: 0
 
-      - task: DotNetCoreCLI@2
-        displayName: 'Dotnet restore'
-        inputs:
-          command: 'restore'
-          projects: |
-            ${{ parameters.SolutionPath }}
-          restoreArguments: '--locked-mode'
-          feedsToUse: 'config'
-          nugetConfigPath: '${{ parameters.NugetConfigPath }}'
-          verbosityRestore: 'Minimal'
-
-      - task: DotNetCoreCLI@2
-        displayName: 'Build solution'
-        inputs:
-          command: 'build'
-          projects: '${{ parameters.SolutionPath }}'
-
       - task: ArchiveFiles@2
-        displayName: 'Archive files'
+        displayName: 'Archive script files'
         inputs:
-          rootFolderOrFile: '$(System.DefaultWorkingDirectory)/DbUp-POC/bin/Debug/net8.0'
+          rootFolderOrFile: '$(System.DefaultWorkingDirectory)/DbUp-POC/Scripts/${{ parameters.ScriptsDirectory}}'
           archiveType: 'zip'
           archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
 
       - task: UniversalPackages@0
-        displayName: 'Publish Universal Package'
+        displayName: 'Publish scripts as artifact'
         inputs:
           command: publish
           publishDirectory: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
           vstsFeedPublish: 'dbupgrade-poc/${{ parameters.ArtifactFeedName }}'
-          vstsFeedPackagePublish: '${{ parameters.FeedPackageName }}'
-          version: custom
+          vstsFeedPackagePublish: '${{ parameters.ScriptsDirectory }}'
           versionPublish: '$(package_version)'
-          packagePublishDescription: 'Database updater of run ${Build.BuildId} run by ${Build.QueuedBy}.'
+          packagePublishDescription: 'Scripts for ${{ parameters.ScriptsDirectory }}.'
