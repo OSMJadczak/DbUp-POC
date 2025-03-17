@@ -35,8 +35,8 @@ jobs:
           Write-Host "##vso[task.setvariable variable=projectName;]$projectName"
 
       - powershell: |
-          $archiveName = ("$(projectName)" + ".zip")
-          Write-Host "##vso[task.setvariable variable=archiveName;]$archiveName"
+          $arch = ("$(projectName)" + ".zip")
+          Write-Host "##vso[task.setvariable variable=archiveName;]$arch"
 
       - powershell: |
           Write-Host: "$(archiveName)"
