@@ -35,11 +35,11 @@ jobs:
           Write-Host "##vso[task.setvariable variable=projectName;]$projectName"
 
       - powershell: |
-          $archiveName = $(projectName).zip
+          $archiveName = concat($(projectName),'.zip')
           Write-Host "##vso[task.setvariable variable=archiveName;]$archiveName"
 
       - powershell: |
-          Write-Host: "$(ArchiveName)"
+          Write-Host: "$(archiveName)"
 
       - task: ArchiveFiles@2
         displayName: 'Archive script files'
