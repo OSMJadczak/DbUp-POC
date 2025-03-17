@@ -45,6 +45,9 @@ jobs:
           archiveType: 'zip'
           archiveFile: $(archiveName)
 
+      - powershell: |
+          Write-Host '${projectName}'
+          
       - task: UniversalPackages@0
         displayName: 'Publish scripts as artifact'
         inputs:
