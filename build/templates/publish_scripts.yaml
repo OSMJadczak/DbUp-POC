@@ -31,12 +31,14 @@ jobs:
         fetchDepth: 0
 
       - powershell: |
-          $projectName = ("${{ parameters.ScriptsDirectory }}".ToLower()).split("_")[1]
-          Write-Host "##vso[task.setvariable variable=projectName;]$projectName"
+          $proj = ("${{ parameters.ScriptsDirectory }}".ToLower()).split("_")[1]
+          Write-Host "##vso[task.setvariable variable=projectName;]$proj"
+          Write-Host $(projectName)
 
       - powershell: |
           $arch = ("$(projectName)" + ".zip")
           Write-Host "##vso[task.setvariable variable=archiveName;]$arch"
+          Write-Host $(archiveName)
 
       # - task: ArchiveFiles@2
       #   displayName: 'Archive script files'
