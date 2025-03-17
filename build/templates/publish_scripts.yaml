@@ -31,7 +31,7 @@ jobs:
         fetchDepth: 0
 
       - powershell: |
-          $projectName = ("${{ parameters.ScriptsDirectory }}".split("_")[1]).ToLower()
+          $projectName = ("${{ parameters.ScriptsDirectory }}".ToLower()).split("_")[1]
           Write-Host "##vso[task.setvariable variable=projectName;]$projectName"
 
       - powershell: |
