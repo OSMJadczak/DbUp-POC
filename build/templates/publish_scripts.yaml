@@ -33,11 +33,13 @@ jobs:
       - powershell: |
           $proj = ("${{ parameters.ScriptsDirectory }}".ToLower()).split("_")[1]
           Write-Host "##vso[task.setvariable variable=projectName;]$proj"
+          Write-Host $proj
           Write-Host $(projectName)
 
       - powershell: |
           $arch = ("$(projectName)" + ".zip")
           Write-Host "##vso[task.setvariable variable=archiveName;]$arch"
+          Write-Host $arch
           Write-Host $(archiveName)
 
       # - task: ArchiveFiles@2
