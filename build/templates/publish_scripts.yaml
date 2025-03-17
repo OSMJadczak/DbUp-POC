@@ -38,22 +38,22 @@ jobs:
           $arch = ("$(projectName)" + ".zip")
           Write-Host "##vso[task.setvariable variable=archiveName;]$arch"
 
-      - task: ArchiveFiles@2
-        displayName: 'Archive script files'
-        inputs:
-          rootFolderOrFile: '$(System.DefaultWorkingDirectory)/DbUp-POC/Scripts/${{ parameters.ScriptsDirectory }}'
-          archiveType: 'zip'
-          archiveFile: $(archiveName)
+      # - task: ArchiveFiles@2
+      #   displayName: 'Archive script files'
+      #   inputs:
+      #     rootFolderOrFile: '$(System.DefaultWorkingDirectory)/DbUp-POC/Scripts/${{ parameters.ScriptsDirectory }}'
+      #     archiveType: 'zip'
+      #     archiveFile: $(archiveName)
 
-      - powershell: |
-          Write-Host "${projectName}"
-          Write-Host "${archiveName}"
+      # - powershell: |
+      #     Write-Host "${projectName}"
+      #     Write-Host "${archiveName}"
           
       - task: UniversalPackages@0
         displayName: 'Publish scripts as artifact'
         inputs:
           command: publish
-          publishDirectory: "$(System.DefaultWorkingDirectory)/$(archiveName)"
+          publishDirectory: "$(System.DefaultWorkingDirectory)/DbUp-POC/$(projectName)"
           vstsFeedPublish: 'dbupgrade-poc/${{ parameters.ArtifactFeedName }}'
           vstsFeedPackagePublish: '${projectName}'
           versionPublish: '$(package_version)'
