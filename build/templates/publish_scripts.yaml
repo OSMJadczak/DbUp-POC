@@ -24,6 +24,8 @@ jobs:
     variables:
       - name: 'projectName'
         value: 'unset'
+      - name: 'archiveName'
+        value: 'unset'
     steps:
       - checkout: self
         fetchDepth: 0
@@ -36,18 +38,22 @@ jobs:
           Write-Host "$(projectName)"
           Write-Host "$(Build.ArtifactStagingDirectory)"
 
+      - powershell: |
+          $archiveName = $(projectName) + ".zip"
+          Write-Host "##vso[task.setvariable variable=archiveName;]$archiveName"
+
       - task: ArchiveFiles@2
         displayName: 'Archive script files'
         inputs:
           rootFolderOrFile: '$(System.DefaultWorkingDirectory)/DbUp-POC/Scripts/${{ parameters.ScriptsDirectory }}'
           archiveType: 'zip'
-          archiveFile: "${projectName}.zip"
+          archiveFile: archiveName
 
       - task: UniversalPackages@0
         displayName: 'Publish scripts as artifact'
         inputs:
           command: publish
-          publishDirectory: "$(Build.ArtifactStagingDirectory)/$(projectName).zip"
+          publishDirectory: "$(Build.ArtifactStagingDirectory)/$(archiveName)"
           vstsFeedPublish: 'dbupgrade-poc/${{ parameters.ArtifactFeedName }}'
           vstsFeedPackagePublish: '${projectName}'
           versionPublish: '$(package_version)'
