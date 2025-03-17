@@ -34,19 +34,20 @@ jobs:
       
       - powershell: |
           Write-Host "$(projectName)"
+          Write-Host "$(Build.ArtifactStagingDirectory)"
 
       - task: ArchiveFiles@2
         displayName: 'Archive script files'
         inputs:
           rootFolderOrFile: '$(System.DefaultWorkingDirectory)/DbUp-POC/Scripts/${{ parameters.ScriptsDirectory }}'
           archiveType: 'zip'
-          archiveFile: '${projectName}.zip'
+          archiveFile: "${projectName}.zip"
 
       - task: UniversalPackages@0
         displayName: 'Publish scripts as artifact'
         inputs:
           command: publish
-          publishDirectory: '$(Build.ArtifactStagingDirectory)/$(projectName).zip'
+          publishDirectory: "$(Build.ArtifactStagingDirectory)/$(projectName).zip"
           vstsFeedPublish: 'dbupgrade-poc/${{ parameters.ArtifactFeedName }}'
           vstsFeedPackagePublish: '${projectName}'
           versionPublish: '$(package_version)'
