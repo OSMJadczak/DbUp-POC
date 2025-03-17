@@ -46,7 +46,7 @@ jobs:
         inputs:
           rootFolderOrFile: '$(System.DefaultWorkingDirectory)/DbUp-POC/Scripts/${{ parameters.ScriptsDirectory }}'
           archiveType: 'zip'
-          archiveFile: archiveName
+          archiveFile: $(archiveName)
 
       - task: UniversalPackages@0
         displayName: 'Publish scripts as artifact'
