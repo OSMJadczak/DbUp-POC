@@ -33,7 +33,7 @@ jobs:
           Write-Host "##vso[task.setvariable variable=projectName;]$projectName"
       
       - powershell: |
-          Write-Host "$projectName"
+          Write-Host "$(projectName)"
 
       - task: ArchiveFiles@2
         displayName: 'Archive script files'
