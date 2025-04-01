@@ -17,13 +17,14 @@ parameters:
 
 variables:
   scriptsFolder: 'Scripts'
+  projectName: 'DbUp-POC'
 
 steps:
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
     script: |
-      $folderPath = "$(Build.SourcesDirectory)\$(scriptsFolder)\${{ parameters.folderName }}"
+      $folderPath = "$(Build.SourcesDirectory)\$(projectName)\$(scriptsFolder)\${{ parameters.folderName }}"
       if (-Not (Test-Path -Path $folderPath)) {
         Write-Error "Specified folder does not exist: $folderPath"
         exit 1
