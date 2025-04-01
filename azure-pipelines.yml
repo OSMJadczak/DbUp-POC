@@ -23,15 +23,15 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      $folderPath = "$(Build.SourcesDirectory)\$(scriptsFolder)\$(folderName)"
+      $folderPath = "$(Build.SourcesDirectory)\$(scriptsFolder)\${{ parameters.folderName }}"
       if (-Not (Test-Path -Path $folderPath)) {
         Write-Error "Specified folder does not exist: $folderPath"
         exit 1
       }
-      $archivePath = "$(Build.ArtifactStagingDirectory)\$(folderName).zip"
+      $archivePath = "$(Build.ArtifactStagingDirectory)\${{ parameters.folderName }}.zip"
       Compress-Archive -Path "$folderPath\*" -DestinationPath $archivePath
       Write-Host "##vso[task.setvariable variable=archivePath]$archivePath"
-      Write-Host "##vso[task.setvariable variable=packageName]$(folderName)"
+      Write-Host "##vso[task.setvariable variable=packageName]${{ parameters.folderName }}"
 
 - task: PublishPipelineArtifact@1
   inputs:
