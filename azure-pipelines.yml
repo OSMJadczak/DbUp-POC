@@ -1,0 +1,43 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'windows-latest'
+
+parameters:
+  - name: artifactFeedName
+    displayName: 'Artifact Feed Name'
+    type: string
+    default: 'ScriptsFeed'
+  - name: folderName
+    displayName: 'Folder Name'
+    type: string
+    default: '20250310_MR3_2025'
+
+variables:
+  scriptsFolder: 'Scripts'
+
+steps:
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $folderPath = "$(Build.SourcesDirectory)\$(scriptsFolder)\$(folderName)"
+      if (-Not (Test-Path -Path $folderPath)) {
+        Write-Error "Specified folder does not exist: $folderPath"
+        exit 1
+      }
+      $archivePath = "$(Build.ArtifactStagingDirectory)\$(folderName).zip"
+      Compress-Archive -Path "$folderPath\*" -DestinationPath $archivePath
+      Write-Host "##vso[task.setvariable variable=archivePath]$archivePath"
+      Write-Host "##vso[task.setvariable variable=packageName]$(folderName)"
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(archivePath)'
+    artifact: 'scripts-archive'
+
+- task: UniversalPackages@0
+  inputs:
+    command: 'publish'
+    publishDirectory: 
