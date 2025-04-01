@@ -1,64 +1,49 @@
+trigger:
+- main
+
+pool:
+  name: MyPool
+  vmImage: 'windows-latest'
+
 parameters:
-  - name: 'TimeoutInMinutes'
-    type: number
-    default: 20
-
-  - name: 'NugetConfigPath'
-    type: string
-    default: '$(System.DefaultWorkingDirectory)/nuget.config'
-
-  - name: 'ScriptsDirectory'
-    type: string
-    default: '20250310_WantedProject'
-  
-  - name: 'ArtifactFeedName'
+  - name: artifactFeedName
+    displayName: 'Artifact Feed Name'
     type: string
     default: 'ScriptsFeed'
+  - name: folderName
+    displayName: 'Folder Name'
+    type: string
+    default: '20250310_MR3_2025'
 
-jobs:
-  - job: ArtifactPublish
-    pool: MyPool
-    displayName: 'Publish scripts for Database Upgrade'
-    timeoutInMinutes: '${{ parameters.TimeoutInMinutes }}'
-    cancelTimeoutInMinutes: 2
-    variables:
-      - name: 'projectName'
-        value: 'unset'
-      - name: 'archiveName'
-        value: 'unset'
-    steps:
-      - checkout: self
-        fetchDepth: 0
+variables:
+  scriptsFolder: 'Scripts'
+  projectName: 'DbUp-POC'
+  packageName: $[ lower('${{ parameters.folderName }}') ]
 
-      - powershell: |
-          $proj = ("${{ parameters.ScriptsDirectory }}".ToLower()).split("_")[1]
-          Write-Host "##vso[task.setvariable variable=projectName;]$proj"
-          Write-Host $proj
-          Write-Host $(projectName)
+steps:
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $folderPath = "$(Build.SourcesDirectory)\$(projectName)\$(scriptsFolder)\${{ parameters.folderName }}"
+      if (-Not (Test-Path -Path $folderPath)) {
+        Write-Error "Specified folder does not exist: $folderPath"
+        exit 1
+      }
+      $archivePath = "$(Build.ArtifactStagingDirectory)\${{ parameters.folderName }}.zip"
+      Compress-Archive -Path "$folderPath\*" -DestinationPath $archivePath
+      Write-Host "##vso[task.setvariable variable=archivePath]$archivePath"
 
-      - powershell: |
-          $arch = ("$(projectName)" + ".zip")
-          Write-Host "##vso[task.setvariable variable=archiveName;]$arch"
-          Write-Host $arch
-          Write-Host $(archiveName)
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(archivePath)'
+    artifact: 'scripts-archive'
 
-      # - task: ArchiveFiles@2
-      #   displayName: 'Archive script files'
-      #   inputs:
-      #     rootFolderOrFile: '$(System.DefaultWorkingDirectory)/DbUp-POC/Scripts/${{ parameters.ScriptsDirectory }}'
-      #     archiveType: 'zip'
-      #     archiveFile: $(archiveName)
-
-      # - powershell: |
-      #     Write-Host "${projectName}"
-      #     Write-Host "${archiveName}"
-          
-      - task: UniversalPackages@0
-        displayName: 'Publish scripts as artifact'
-        inputs:
-          command: publish
-          publishDirectory: "$(System.DefaultWorkingDirectory)/DbUp-POC/$(projectName)"
-          vstsFeedPublish: 'dbupgrade-poc/${{ parameters.ArtifactFeedName }}'
-          vstsFeedPackagePublish: '${projectName}'
-          versionPublish: '$(package_version)'
-          packagePublishDescription: 'Scripts for ${{ parameters.ScriptsDirectory }}.'
+- task: UniversalPackages@0
+  inputs:
+    command: 'publish'
+    publishDirectory: '$(Build.SourcesDirectory)\$(projectName)\$(scriptsFolder)\${{ parameters.folderName }}'
+    vstsFeedPublish: 'dbupgrade-poc/${{ parameters.artifactFeedName }}'
+    vstsFeedPackagePublish: '$(packageName)'
+    versionPublish: '$(package_version)'
+    packagePublishDescription: 'Scripts for ${{ parameters.folderName }}.'
