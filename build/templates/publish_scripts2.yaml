@@ -46,4 +46,4 @@ steps:
     vstsFeedPublish: 'dbupgrade-poc/${{ parameters.ArtifactFeedName }}'
     vstsFeedPackagePublish: '${projectName}'
     versionPublish: '$(package_version)'
-    packagePublishDescription: 'Scripts for ${{ parameters.ScriptsDirectory }}.'
+    packagePublishDescription: 'Scripts for ${{ parameters.folderName }}.'
