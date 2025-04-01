@@ -42,4 +42,8 @@ steps:
 - task: UniversalPackages@0
   inputs:
     command: 'publish'
-    publishDirectory: 
+    publishDirectory: "$(Build.SourcesDirectory)\$(projectName)\$(scriptsFolder)\${{ parameters.folderName }}"
+    vstsFeedPublish: 'dbupgrade-poc/${{ parameters.ArtifactFeedName }}'
+    vstsFeedPackagePublish: '${projectName}'
+    versionPublish: '$(package_version)'
+    packagePublishDescription: 'Scripts for ${{ parameters.ScriptsDirectory }}.'
