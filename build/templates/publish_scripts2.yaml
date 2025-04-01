@@ -34,11 +34,6 @@ steps:
       Compress-Archive -Path "$folderPath\*" -DestinationPath $archivePath
       Write-Host "##vso[task.setvariable variable=archivePath]$archivePath"
 
-- task: PowerShell@2
-  inputs:
-    targetType: 'inline'
-    script: 'Write-Host $(packageName)'
-
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: '$(archivePath)'
