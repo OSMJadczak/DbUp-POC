@@ -18,7 +18,7 @@ parameters:
 variables:
   scriptsFolder: 'Scripts'
   projectName: 'DbUp-POC'
-  packageName: $[ lower(${{ parameters.folderName }}) ]
+  packageName: $[ lower('${{ parameters.folderName }}') ]
 
 steps:
 - task: PowerShell@2
