@@ -13,7 +13,7 @@ parameters:
   - name: folderName
     displayName: 'Folder Name'
     type: string
-    default: '20250310_mr3_2025'
+    default: '20250310_MR3_2025'
 
 variables:
   scriptsFolder: 'Scripts'
