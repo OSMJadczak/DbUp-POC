@@ -46,6 +46,6 @@ steps:
     command: 'publish'
     publishDirectory: '$(Build.SourcesDirectory)\$(projectName)\$(scriptsFolder)\${{ parameters.folderName }}'
     vstsFeedPublish: 'dbupgrade-poc/${{ parameters.artifactFeedName }}'
-    vstsFeedPackagePublish: '${{ parameters.folderName }}'
+    vstsFeedPackagePublish: '$(packageName)'
     versionPublish: '$(package_version)'
     packagePublishDescription: 'Scripts for ${{ parameters.folderName }}.'
