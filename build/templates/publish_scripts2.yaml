@@ -18,7 +18,7 @@ parameters:
 variables:
   scriptsFolder: 'Scripts'
   projectName: 'DbUp-POC'
-  packageName: ''
+  packageName: ${{ lower(${{ parameters.folderName }}) }}
 
 steps:
 - task: PowerShell@2
@@ -33,7 +33,6 @@ steps:
       $archivePath = "$(Build.ArtifactStagingDirectory)\${{ parameters.folderName }}.zip"
       Compress-Archive -Path "$folderPath\*" -DestinationPath $archivePath
       Write-Host "##vso[task.setvariable variable=archivePath]$archivePath"
-      Write-Host "##vso[task.setvariable variable=packageName]lower(${{ parameters.folderName }})"
 
 - task: PowerShell@2
   inputs:
