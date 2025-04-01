@@ -33,7 +33,7 @@ steps:
       $archivePath = "$(Build.ArtifactStagingDirectory)\${{ parameters.folderName }}.zip"
       Compress-Archive -Path "$folderPath\*" -DestinationPath $archivePath
       Write-Host "##vso[task.setvariable variable=archivePath]$archivePath"
-      $test = ${{ parameters.folderName }}.ToLower()
+      $test = ${{ parameters.folderName }}.ToLower
       Write-Host "##vso[task.setvariable variable=packageName]$test"
 
 - task: PublishPipelineArtifact@1
