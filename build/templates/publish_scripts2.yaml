@@ -13,7 +13,7 @@ parameters:
   - name: folderName
     displayName: 'Folder Name'
     type: string
-    default: '20250310_MR3_2025'
+    default: '20250310_mr3_2025'
 
 variables:
   scriptsFolder: 'Scripts'
@@ -44,6 +44,6 @@ steps:
     command: 'publish'
     publishDirectory: '$(Build.SourcesDirectory)\$(projectName)\$(scriptsFolder)\${{ parameters.folderName }}'
     vstsFeedPublish: 'dbupgrade-poc/${{ parameters.artifactFeedName }}'
-    vstsFeedPackagePublish: '${projectName}'
+    vstsFeedPackagePublish: '${{ parameters.folderName }}'
     versionPublish: '$(package_version)'
     packagePublishDescription: 'Scripts for ${{ parameters.folderName }}.'
